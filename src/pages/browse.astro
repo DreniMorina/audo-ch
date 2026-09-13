@@ -1,0 +1,18 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { BrowsePage } from '@/components/browse/BrowsePage';
+import { parseBrowseSearch } from '@/lib/browse-search';
+
+// Rendered per request: the filters this page opens with come from the query string.
+export const prerender = false;
+
+const search = parseBrowseSearch(Astro.url.searchParams);
+---
+
+<Layout
+  title="Gebrauchte Elektroautos kaufen in der Schweiz — audo.ch"
+  description="Suche gebrauchte Elektroautos in der Schweiz und filtere nach Marke, Preis, Reichweite, Batterie und Ladeleistung."
+  path="/browse"
+>
+  <BrowsePage client:load search={search} />
+</Layout>

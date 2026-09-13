@@ -1,0 +1,40 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { SeoLandingPage } from '@/components/site/SeoLandingPage';
+
+const sections = [
+  {
+    title: 'E-Autos gezielt vergleichen',
+    body: 'Filtere nach Marke, Preis und Reichweite und finde Elektroautos, die zu deinem Alltag in der Schweiz passen.',
+  },
+  {
+    title: 'Batterie im Fokus',
+    body: 'Audo.ch stellt Batterie- und Reichweitendaten in den Mittelpunkt, damit du Angebote besser einschätzen kannst.',
+  },
+  {
+    title: 'Laden und Reichweite verstehen',
+    body: 'Vergleiche WLTP-Reichweite und DC-Ladeleistung, bevor du Kontakt mit Verkäufern aufnimmst.',
+  },
+  {
+    title: 'Vertrauen beim Kauf',
+    body: 'Jedes Inserat enthält wichtige technische Eckdaten zum Fahrzeug und kann vom Verkäufer aktuell gehalten werden.',
+  },
+];
+---
+
+<Layout
+  title="Elektroauto kaufen Schweiz | Neue & gebrauchte E-Autos | Audo.ch"
+  description="Elektroauto in der Schweiz kaufen: Vergleiche neue und gebrauchte E-Autos mit Batterie-, Reichweiten-, Lade- und Garantiedaten auf Audo.ch."
+  path="/elektroauto-kaufen-schweiz"
+>
+  <SeoLandingPage
+    eyebrow="Elektroauto kaufen Schweiz"
+    title="Elektroauto kaufen in der Schweiz — transparent, elektrisch, einfach."
+    description="Audo.ch hilft dir, passende E-Autos nach Reichweite, Batterie, Ladeleistung, Preis und Standort zu vergleichen."
+    primaryCta="E-Autos entdecken"
+    primaryTo="/browse"
+    secondaryCta="Eigenes E-Auto verkaufen"
+    secondaryTo="/elektroauto-verkaufen-schweiz"
+    sections={sections}
+  />
+</Layout>

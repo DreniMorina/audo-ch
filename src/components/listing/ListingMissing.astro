@@ -1,0 +1,19 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { ListingNotFound } from './ListingNotFound';
+
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+---
+
+<Layout
+  title="Elektroauto-Inserat nicht gefunden | Audo.ch"
+  description="Dieses Elektroauto-Inserat ist nicht mehr auf Audo.ch verfügbar."
+  path={path}
+  robots="noindex,follow"
+>
+  <ListingNotFound />
+</Layout>

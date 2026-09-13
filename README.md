@@ -1,43 +1,61 @@
-# Astro Starter Kit: Minimal
+# audo.ch
+
+Der Schweizer Marktplatz für Elektroautos — Astro-Frontend mit React-Islands, Supabase als Backend.
+
+## Setup
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+cp .env.example .env   # Supabase-Keys eintragen
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+| Befehl            | Aktion                                     |
+| :---------------- | :----------------------------------------- |
+| `npm run dev`     | Dev-Server auf http://localhost:4321       |
+| `npm run build`   | Production-Build (Vercel-Output)           |
+| `npm run preview` | Build lokal ansehen                        |
+| `npm run astro`   | Astro-CLI (`astro check`, `astro add`, …)  |
 
-## 🚀 Project Structure
+## Architektur
 
-Inside of your Astro project, you'll see the following folders and files:
+Astro übernimmt Routing, `<head>` und Server-Rendering; die UI-Komponenten sind React und
+werden standardmässig zu statischem HTML gerendert. Nur Komponenten, die eine Seite mit einer
+`client:*`-Direktive einbindet, laden JavaScript im Browser.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+src/
+├── pages/            Astro-Routen: URL, SEO-Head, Island-Grenzen
+│   ├── listings/[id].astro          SSR – lädt das Inserat serverseitig (SEO, echte 404)
+│   ├── browse.astro                 SSR – Filter kommen aus der Query-String
+│   ├── account/                     Konto & Inserat bearbeiten
+│   └── sitemap.xml.ts               SSR – statische Seiten + alle freigegebenen Inserate
+├── layouts/Layout.astro             HTML-Shell, Meta-Tags, Canonical, JSON-LD, Header/Footer
+├── components/       React-Komponenten (site, home, browse, listing, sell, account, legal)
+├── data/             Supabase-Zugriff auf Inserate, Bilder und Zertifikate
+├── hooks/            Supabase-Session, Login-Link-Cooldown, Cookie-Consent
+├── integrations/     Supabase-Client
+├── lib/              SEO, Formatierung, Fehlermeldungen, Google Analytics
+├── middleware.ts     www→Apex-Redirect und Rate-Limit (nur für SSR-Routen)
+└── styles/global.css Design-System (Tailwind v4 Theme)
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Rendering-Modus
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Alle Seiten werden vorgerendert, ausser:
 
-Any static assets, like images, can be placed in the `public/` directory.
+| Route                            | Grund                                              |
+| :------------------------------- | :------------------------------------------------- |
+| `/listings/[id]`                 | Inserat serverseitig laden, 404 für gelöschte Inserate |
+| `/browse`                        | Startfilter kommen aus `?q=`, `?brand=`, …          |
+| `/account/listings/[id]/edit`    | Dynamische ID ohne bekannte Pfadliste               |
+| `/sitemap.xml`                   | Enthält alle aktuell freigegebenen Inserate         |
 
-## 🧞 Commands
+## Umgebungsvariablen
 
-All commands are run from the root of the project, from a terminal:
+Siehe `.env.example`. Die `VITE_*`-Namen aus dem bisherigen Deployment funktionieren weiter:
+`astro.config.mjs` setzt `envPrefix: ['PUBLIC_', 'VITE_']`.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Datenbank
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Die Supabase-Migrationen liegen unter `supabase/migrations/`.

@@ -1,0 +1,16 @@
+export const POPULAR_EV_BRANDS = [
+  "BYD",
+  "Tesla",
+  "Geely",
+  "Volkswagen",
+  "SAIC",
+  "Hyundai-Kia",
+  "Wuling",
+  "Leapmotor",
+  "Xpeng",
+  "BMW",
+  "Mercedes",
+  "Volvo",
+  "Renault",
+  "Andere",
+] as const;

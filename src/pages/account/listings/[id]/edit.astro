@@ -1,0 +1,14 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { EditListingPage } from '@/components/account/EditListingPage';
+
+// Dynamic route with unknown ids, so it is rendered on demand rather than prebuilt.
+export const prerender = false;
+
+const id = Astro.params.id!;
+const path = `/account/listings/${id}/edit`;
+---
+
+<Layout title="Inserat bearbeiten — audo.ch" description="Bearbeite dein Inserat." path={path}>
+  <EditListingPage client:load id={id} />
+</Layout>

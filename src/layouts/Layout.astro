@@ -1,69 +1,87 @@
 ---
-import '../styles/global.css';
-import { SEO } from 'astro-seo';
-import StructuredData from '../components/StructuredData.astro';
+import '@/styles/global.css';
+import { Header } from '@/components/site/Header';
+import { Footer } from '@/components/site/Footer';
+import { CookieBanner } from '@/components/site/CookieBanner';
+import { GoogleAnalytics } from '@/components/site/GoogleAnalytics';
+import { canonicalUrl, jsonLdScript, seoMeta, websiteJsonLd } from '@/lib/seo';
 
 interface Props {
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
+  /** Path this page is canonical for, e.g. `/browse`. Omit it on error pages. */
+  path?: string;
   image?: string;
-  noindex?: boolean;
+  robots?: string;
+  /** Page-specific JSON-LD, added after the site-wide WebSite graph. */
+  jsonLd?: unknown[];
+  /** Set to false for the standalone error screens, which render without header and footer. */
+  chrome?: boolean;
 }
 
-const {
-  title = 'Audo',
-  description = 'Audo.ch',
-  image = '/og-image.png',
-  noindex = false,
-} = Astro.props;
+const { title, description, path, image, robots, jsonLd = [], chrome = true } = Astro.props;
 
-const canonical = Astro.url.href;
-const ogImage = new URL(image, Astro.site).href;
+const meta = seoMeta({ title, description, path, image, robots });
+const pageTitle = meta.find((entry) => 'title' in entry)?.title ?? title;
+const metaTags = meta.filter((entry): entry is Exclude<typeof entry, { title: string }> =>
+  !('title' in entry),
+);
+const structuredData = [websiteJsonLd(), ...jsonLd].map(jsonLdScript);
 ---
 
 <!doctype html>
 <html lang="de-CH">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    {
+      metaTags.map((tag) =>
+        'property' in tag ? (
+          <meta property={tag.property} content={tag.content} />
+        ) : (
+          <meta name={tag.name} content={tag.content} />
+        ),
+      )
+    }
+    <meta name="author" content="audo.ch" />
 
-    <SEO
-      title={title}
-      titleTemplate="%s | Audo"
-      description={description}
-      canonical={canonical}
-      noindex={noindex}
-      openGraph={{
-        basic: {
-          title,
-          type: 'website',
-          image: ogImage,
-          url: canonical,
-        },
-        optional: {
-          description,
-          locale: 'de_CH',
-          siteName: 'Audo',
-        },
-      }}
-      twitter={{
-        card: 'summary_large_image',
-        title,
-        description,
-        image: ogImage,
-        imageAlt: 'Audo',
-      }}
+    {/*
+      Exactly one canonical per page, declared by the page itself. The previous app
+      learned this the hard way: a canonical on the shared layout shipped a second
+      `<link rel="canonical" href="https://audo.ch/">` on every subpage, and Google
+      discards conflicting canonicals, which pointed the whole site at the homepage.
+    */}
+    {path && <link rel="canonical" href={canonicalUrl(path)} />}
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap"
     />
 
-    <StructuredData />
-
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    {
+      structuredData.map((script) => (
+        <script is:inline type={script.type} set:html={script.children} />
+      ))
+    }
   </head>
 
   <body>
-    <slot />
+    {
+      chrome ? (
+        <div class="flex min-h-screen flex-col">
+          <Header pathname={Astro.url.pathname} />
+          <slot />
+          <Footer />
+        </div>
+      ) : (
+        <slot />
+      )
+    }
+    <GoogleAnalytics client:idle />
+    <CookieBanner client:idle />
   </body>
 </html>

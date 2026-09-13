@@ -1,0 +1,40 @@
+---
+import Layout from '@/layouts/Layout.astro';
+
+// Astro renders this page when a request handler throws, which replaces the
+// framework-specific error plumbing the TanStack app needed for the same job.
+---
+
+<Layout
+  title="Diese Seite konnte nicht geladen werden | Audo.ch"
+  description="Auf audo.ch ist etwas schiefgelaufen. Bitte aktualisiere die Seite oder kehre zur Startseite zurück."
+  robots="noindex,follow"
+  chrome={false}
+>
+  <div class="flex min-h-screen items-center justify-center bg-background px-4">
+    <div class="max-w-md text-center">
+      <h1 class="text-xl font-semibold tracking-tight text-foreground">
+        Diese Seite konnte nicht geladen werden
+      </h1>
+      <p class="mt-2 text-sm text-muted-foreground">
+        Auf unserer Seite ist etwas schiefgelaufen. Bitte aktualisiere die Seite oder kehre zur
+        Startseite zurück.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-2">
+        <button
+          type="button"
+          onclick="location.reload()"
+          class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          Erneut versuchen
+        </button>
+        <a
+          href="/"
+          class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+        >
+          Zur Startseite
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,40 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { SeoLandingPage } from '@/components/site/SeoLandingPage';
+
+const sections = [
+  {
+    title: 'Für E-Auto-Käufer optimiert',
+    body: 'Audo.ch zeigt die technischen Angaben, die beim Elektroauto-Verkauf besonders wichtig sind.',
+  },
+  {
+    title: 'Batterie schafft Vertrauen',
+    body: 'Angaben zu State of Health, Batteriegrösse und Garantie helfen Käufern, dein Inserat besser einzuschätzen.',
+  },
+  {
+    title: 'Reichweite und Laden hervorheben',
+    body: 'Präsentiere WLTP-Reichweite und DC-Ladeleistung klar, damit dein Fahrzeug schneller vergleichbar ist.',
+  },
+  {
+    title: 'Einfach online starten',
+    body: 'Fülle die wichtigsten Fahrzeugdaten aus, melde dich per Link an und veröffentliche dein Inserat direkt.',
+  },
+];
+---
+
+<Layout
+  title="Elektroauto verkaufen Schweiz | E-Auto online inserieren | Audo.ch"
+  description="Elektroauto in der Schweiz verkaufen: Inseriere dein E-Auto online mit Batterie-, Reichweiten-, Lade- und Garantiedaten für passende Käufer."
+  path="/elektroauto-verkaufen"
+>
+  <SeoLandingPage
+    eyebrow="Elektroauto verkaufen"
+    title="Elektroauto online verkaufen — mit den Daten, die E-Auto-Käufer erwarten."
+    description="Erstelle ein Inserat für dein Elektroauto und erreiche Käufer, die gezielt nach Reichweite, Batteriezustand und Ladeleistung suchen."
+    primaryCta="E-Auto kostenlos inserieren"
+    primaryTo="/elektroauto-verkaufen-schweiz"
+    secondaryCta="Marktplatz ansehen"
+    secondaryTo="/browse"
+    sections={sections}
+  />
+</Layout>

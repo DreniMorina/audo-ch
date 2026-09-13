@@ -1,0 +1,46 @@
+const NAV_LINKS = [
+  { href: "/browse", label: "E-Autos kaufen" },
+  { href: "/elektroauto-verkaufen-schweiz", label: "E-Auto verkaufen" },
+  { href: "/account", label: "Mein Profil" },
+];
+
+/** Mirrors the router's default active matching: exact hit or a nested child route. */
+function isActive(pathname: string, href: string) {
+  const current = pathname.length > 1 ? pathname.replace(/\/$/, "") : pathname;
+  return current === href || current.startsWith(`${href}/`);
+}
+
+export function Header({ pathname }: { pathname: string }) {
+  return (
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <a href="/" className="flex items-center">
+          <span className="font-display text-2xl font-extrabold tracking-tight text-primary">
+            Audo.ch
+          </span>
+        </a>
+
+        <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className={`transition-colors hover:text-foreground${
+                isActive(pathname, link.href) ? " text-foreground" : ""
+              }`}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        <a
+          href="/elektroauto-verkaufen-schweiz"
+          className="inline-flex h-10 items-center rounded-lg bg-primary px-5 text-base font-medium text-primary-foreground transition-all hover:opacity-90"
+        >
+          Kostenlos inserieren
+        </a>
+      </div>
+    </header>
+  );
+}
