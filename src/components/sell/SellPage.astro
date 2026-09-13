@@ -75,22 +75,24 @@ import { POPULAR_EV_BRANDS } from '@/data/vehicle-brands';
             {POPULAR_EV_BRANDS.map((brand) => <option value={brand}>{brand}</option>)}
           </select>
           <TextField name="model" placeholder="Modell, z. B. Model 3 Long Range" required />
-          <TextField name="year" type="number" placeholder="Baujahr, z. B. 2022" required />
-          <TextField name="mileage" type="number" placeholder="Kilometerstand, z. B. 41200" required />
+          <TextField name="year" type="number" placeholder="Baujahr, z. B. 2022" required min={1990} max={2100} />
+          <TextField name="mileage" type="number" placeholder="Kilometerstand, z. B. 41200" required min={0} />
         </div>
       </FormSection>
 
       <FormSection title="EV-Details">
         <RequiredHint />
         <div class="grid gap-4 md:grid-cols-3">
-          <TextField name="battery" type="number" placeholder="Batterie (kWh), z. B. 75" required />
-          <TextField name="range" type="number" placeholder="Reichweite (km), z. B. 480" required />
-          <TextField name="charging" type="number" placeholder="DC-Laden (kW), z. B. 250" required />
+          <TextField name="battery" type="number" placeholder="Batterie (kWh), z. B. 75" required min={0} />
+          <TextField name="range" type="number" placeholder="Reichweite (km), z. B. 480" required min={0} />
+          <TextField name="charging" type="number" placeholder="DC-Laden (kW), z. B. 250" required min={0} />
           <SelectField name="fastCharging" label="Schnellladen" options={['Ja', 'Nein']} required />
           <TextField
             name="soh"
             type="number"
             placeholder="Batteriezustand (% SoH), z. B. 94 (optional)"
+            min={0}
+            max={100}
           />
           <TextField
             name="certificateDate"
@@ -100,7 +102,7 @@ import { POPULAR_EV_BRANDS } from '@/data/vehicle-brands';
             name="certificateProvider"
             placeholder="Prüfanbieter, z. B. Aviloo / TÜV (optional)"
           />
-          <TextField name="warranty" type="number" placeholder="Restgarantie (Monate), z. B. 28" />
+          <TextField name="warranty" type="number" placeholder="Restgarantie (Monate), z. B. 28" min={0} />
           <div>
             <select
               name="sellerType"
@@ -122,7 +124,7 @@ import { POPULAR_EV_BRANDS } from '@/data/vehicle-brands';
       <FormSection title="Preis & Bilder">
         <RequiredHint />
         <div class="grid gap-4 md:grid-cols-2">
-          <TextField name="price" type="number" placeholder="Preis (CHF), z. B. 32900" required />
+          <TextField name="price" type="number" placeholder="Preis (CHF), z. B. 32900" required min={0} />
           <TextField name="location" placeholder="Ort, z. B. Zürich" required />
         </div>
         <div class="mt-4">

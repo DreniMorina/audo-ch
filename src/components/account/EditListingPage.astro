@@ -51,11 +51,11 @@ const SELECT_CLASSES = 'h-11 w-full rounded-md border border-border bg-backgroun
           </select>
         </label>
         <LabeledField name="model" label="Modell" required />
-        <LabeledField name="year" label="Baujahr" type="number" required />
-        <LabeledField name="mileage" label="Kilometerstand" type="number" required />
-        <LabeledField name="battery" label="Batterie (kWh)" type="number" required />
-        <LabeledField name="range" label="Reichweite (km)" type="number" required />
-        <LabeledField name="charging" label="DC-Laden (kW)" type="number" required />
+        <LabeledField name="year" label="Baujahr" type="number" required min={1990} max={2100} />
+        <LabeledField name="mileage" label="Kilometerstand" type="number" required min={0} />
+        <LabeledField name="battery" label="Batterie (kWh)" type="number" required min={0} />
+        <LabeledField name="range" label="Reichweite (km)" type="number" required min={0} />
+        <LabeledField name="charging" label="DC-Laden (kW)" type="number" required min={0} />
         <label class="space-y-2 text-sm font-medium">
           <span>Schnellladen *</span>
           <select name="fastCharging" required class={`${SELECT_CLASSES} font-normal`}>
@@ -63,11 +63,11 @@ const SELECT_CLASSES = 'h-11 w-full rounded-md border border-border bg-backgroun
             <option>Nein</option>
           </select>
         </label>
-        <LabeledField name="soh" label="Batteriezustand (% SoH)" type="number" />
+        <LabeledField name="soh" label="Batteriezustand (% SoH)" type="number" min={0} max={100} />
         <LabeledField name="certificateDate" label="Datum des Zertifikats" />
         <LabeledField name="certificateProvider" label="Prüfanbieter" />
-        <LabeledField name="warranty" label="Restgarantie (Monate)" type="number" />
-        <LabeledField name="price" label="Preis (CHF)" type="number" required />
+        <LabeledField name="warranty" label="Restgarantie (Monate)" type="number" min={0} />
+        <LabeledField name="price" label="Preis (CHF)" type="number" required min={0} />
         <LabeledField name="location" label="Ort" required />
         <label class="space-y-2 text-sm font-medium">
           <span>Verkäufertyp</span>

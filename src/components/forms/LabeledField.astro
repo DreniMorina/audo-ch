@@ -4,9 +4,12 @@ interface Props {
   label: string;
   type?: astroHTML.JSX.InputHTMLAttributes['type'];
   required?: boolean;
+  /** Mirrors the database constraints on `listings`; the database decides. */
+  min?: number;
+  max?: number;
 }
 
-const { name, label, type = 'text', required = false } = Astro.props;
+const { name, label, type = 'text', required = false, min, max } = Astro.props;
 ---
 
 <label class="space-y-2 text-sm font-medium">
@@ -15,6 +18,8 @@ const { name, label, type = 'text', required = false } = Astro.props;
     name={name}
     type={type}
     required={required}
+    min={min}
+    max={max}
     placeholder={label}
     class="h-11 w-full rounded-md border border-border bg-background px-3 text-sm font-normal"
   />
