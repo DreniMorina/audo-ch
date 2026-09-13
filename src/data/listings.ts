@@ -383,32 +383,50 @@ async function syncListingPrimaryImage(listingId: string) {
 }
 
 export async function uploadListingImages(listingId: string, userId: string, files: File[]) {
-  const { count, error: countError } = await supabase
-    .from("listing_images")
-    .select("id", { count: "exact", head: true })
-    .eq("listing_id", listingId);
-  if (countError) throw countError;
-
-  const remainingSlots = Math.max(MAX_LISTING_IMAGES - (count ?? 0), 0);
-  const filesToUpload = files.slice(0, remainingSlots);
-  validateListingImageFiles(filesToUpload);
+  validateListingImageFiles(files);
   const uploaded: string[] = [];
-  for (let index = 0; index < filesToUpload.length; index += 1) {
-    const file = filesToUpload[index];
-    const ext = fileExtension(file);
-    const path = `${userId}/${listingId}/${crypto.randomUUID()}.${ext}`;
-    const { error: uploadError } = await supabase.storage
-      .from("listing-images")
-      .upload(path, file, { upsert: false, contentType: file.type });
-    if (uploadError) throw uploadError;
+  for (const file of files) {
+    let path: string | null = null;
+    let lastConflict: unknown = null;
+
+    // The policy only accepts these four names. storage.objects' (bucket_id,
+    // name) uniqueness is therefore also the concurrency-safe slot lock.
+    for (let slot = 1; slot <= MAX_LISTING_IMAGES; slot += 1) {
+      const candidate = `${userId}/${listingId}/image-${slot}`;
+      const { error: uploadError } = await supabase.storage
+        .from("listing-images")
+        .upload(candidate, file, { upsert: false, contentType: file.type });
+      if (!uploadError) {
+        path = candidate;
+        break;
+      }
+      if (uploadError.status === 409 || uploadError.statusCode === "409") {
+        lastConflict = uploadError;
+        continue;
+      }
+      throw uploadError;
+    }
+
+    if (!path) {
+      throw new Error(
+        lastConflict
+          ? `Es sind höchstens ${MAX_LISTING_IMAGES} Bilder pro Inserat erlaubt.`
+          : "Es konnte kein Bildspeicherplatz reserviert werden.",
+      );
+    }
+
     uploaded.push(path);
+    const slot = Number(path.slice(path.lastIndexOf("-") + 1));
     const { error: insertError } = await supabase.from("listing_images").insert({
       listing_id: listingId,
       seller_user_id: userId,
       storage_path: path,
-      sort_order: (count ?? 0) + index,
+      sort_order: slot - 1,
     });
-    if (insertError) throw insertError;
+    if (insertError) {
+      await supabase.storage.from("listing-images").remove([path]);
+      throw insertError;
+    }
   }
 
   if (uploaded[0]) {
@@ -452,11 +470,19 @@ export async function uploadBatteryCertificate(
   replacedStoragePath?: string | null,
 ) {
   assertAllowedPdfFile(file);
-  const ext = fileExtension(file);
-  const path = `${userId}/${listingId}/battery-certificate-${crypto.randomUUID()}.${ext}`;
+  // A certificate always occupies the one database-enforced object slot.
+  // Upsert replaces that object atomically instead of retaining old versions
+  // under random names while the listing row is being updated.
+  const path = `${userId}/${listingId}/battery-certificate`;
+  if (replacedStoragePath && replacedStoragePath !== path) {
+    const { error: removeError } = await supabase.storage
+      .from("listing-documents")
+      .remove([replacedStoragePath]);
+    if (removeError) throw removeError;
+  }
   const { error: uploadError } = await supabase.storage
     .from("listing-documents")
-    .upload(path, file, { upsert: false, contentType: file.type || "application/pdf" });
+    .upload(path, file, { upsert: true, contentType: file.type || "application/pdf" });
   if (uploadError) throw uploadError;
 
   const { error } = await supabase
@@ -467,10 +493,6 @@ export async function uploadBatteryCertificate(
   if (error) {
     await supabase.storage.from("listing-documents").remove([path]);
     throw error;
-  }
-
-  if (replacedStoragePath) {
-    await supabase.storage.from("listing-documents").remove([replacedStoragePath]);
   }
 }
 
