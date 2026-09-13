@@ -1,0 +1,69 @@
+---
+import '../styles/global.css';
+import { SEO } from 'astro-seo';
+import StructuredData from '../components/StructuredData.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = 'Audo',
+  description = 'Audo.ch',
+  image = '/og-image.png',
+  noindex = false,
+} = Astro.props;
+
+const canonical = Astro.url.href;
+const ogImage = new URL(image, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="de-CH">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+
+    <SEO
+      title={title}
+      titleTemplate="%s | Audo"
+      description={description}
+      canonical={canonical}
+      noindex={noindex}
+      openGraph={{
+        basic: {
+          title,
+          type: 'website',
+          image: ogImage,
+          url: canonical,
+        },
+        optional: {
+          description,
+          locale: 'de_CH',
+          siteName: 'Audo',
+        },
+      }}
+      twitter={{
+        card: 'summary_large_image',
+        title,
+        description,
+        image: ogImage,
+        imageAlt: 'Audo',
+      }}
+    />
+
+    <StructuredData />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+  </head>
+
+  <body>
+    <slot />
+  </body>
+</html>

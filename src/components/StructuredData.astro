@@ -1,0 +1,31 @@
+---
+const base = Astro.site?.toString().replace(/\/$/, '') ?? '';
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${base}/#organization`,
+      name: 'Audo',
+      url: base,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${base}/#website`,
+      url: base,
+      name: 'Audo',
+      inLanguage: 'de-CH',
+      publisher: {
+        '@id': `${base}/#organization`,
+      },
+    },
+  ],
+};
+---
+
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify(structuredData)}
+/>
