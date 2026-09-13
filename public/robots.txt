@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://audo.ch/sitemap-index.xml
+# Keep authenticated seller and mutation-style routes out of crawler queues.
+Disallow: /account
+Disallow: /account/
+Disallow: /sell
+
+Sitemap: https://audo.ch/sitemap.xml

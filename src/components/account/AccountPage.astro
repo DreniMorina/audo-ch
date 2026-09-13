@@ -1,0 +1,226 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+---
+
+<main data-account class="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <p class="text-xs font-medium uppercase tracking-widest text-muted-foreground">Konto</p>
+      <h1 class="mt-2 font-display text-4xl font-semibold">Mein Profil</h1>
+    </div>
+    <button
+      hidden
+      type="button"
+      data-sign-out
+      class="inline-flex h-10 items-center gap-2 rounded-md border border-border px-4 text-sm font-medium hover:bg-secondary"
+    >
+      <Icon name="LogOut" class="h-4 w-4" /> Abmelden
+    </button>
+  </div>
+
+  <form
+    hidden
+    data-login-form
+    class="mt-10 max-w-xl space-y-4 rounded-3xl border border-border bg-card p-8 shadow-card"
+  >
+    <h2 class="font-display text-xl font-semibold">Per Link anmelden</h2>
+    <input
+      type="email"
+      required
+      name="email"
+      placeholder="deine@email.ch"
+      class="h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-foreground/40 focus:ring-4 focus:ring-electric/20"
+    />
+    <p hidden data-login-sent class="text-sm text-muted-foreground">
+      Link gesendet. Falls er nicht ankommt, kannst du nach kurzer Wartezeit einen neuen Link
+      anfordern.
+    </p>
+    <p hidden data-login-error class="text-sm text-destructive"></p>
+    <button
+      type="submit"
+      data-login-submit
+      class="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground disabled:opacity-50"
+    >
+      Link senden
+    </button>
+  </form>
+
+  <div hidden data-listings-view class="mt-10 space-y-4">
+    <a
+      href="/elektroauto-verkaufen-schweiz"
+      class="inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground"
+    >
+      Neues Inserat erstellen
+    </a>
+    <p hidden data-loading class="text-muted-foreground">Wird geladen…</p>
+    <p hidden data-list-error class="text-sm text-destructive"></p>
+    <p hidden data-empty class="text-muted-foreground">Noch keine Inserate.</p>
+    <div data-listings></div>
+  </div>
+
+  <template data-listing-template>
+    <article
+      class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-card p-5 shadow-card"
+    >
+      <div>
+        <h2 data-title class="font-display text-xl font-semibold"></h2>
+        <p data-meta class="mt-1 text-sm text-muted-foreground"></p>
+      </div>
+      <div class="flex gap-2">
+        <a
+          data-view-link
+          class="rounded-md border border-border px-3 py-2 text-sm hover:bg-secondary"
+        >
+          Ansehen
+        </a>
+        <a
+          data-edit-link
+          class="inline-flex items-center gap-1 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground"
+        >
+          <Icon name="Pencil" class="h-4 w-4" /> Bearbeiten
+        </a>
+        <button
+          type="button"
+          data-delete
+          class="inline-flex items-center gap-1 rounded-md border border-destructive/40 px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 disabled:opacity-50"
+        >
+          <Icon name="Trash2" class="h-4 w-4" /> Löschen
+        </button>
+      </div>
+    </article>
+  </template>
+</main>
+
+<script>
+  import { deleteListing, fetchMyListings, type Listing } from '@/data/listings';
+  import { onUserChange, sendLoginLink, watchLoginLinkCooldown } from '@/lib/auth';
+  import { supabase } from '@/integrations/supabase/client';
+  import { formatCHF, formatKm } from '@/lib/format';
+  import { germanErrorMessage } from '@/lib/german-error';
+
+  const root = document.querySelector<HTMLElement>('[data-account]');
+  if (root) {
+    const signOut = root.querySelector<HTMLButtonElement>('[data-sign-out]')!;
+    const loginForm = root.querySelector<HTMLFormElement>('[data-login-form]')!;
+    const loginEmail = loginForm.querySelector<HTMLInputElement>('input[name="email"]')!;
+    const loginSubmit = root.querySelector<HTMLButtonElement>('[data-login-submit]')!;
+    const loginSent = root.querySelector<HTMLElement>('[data-login-sent]')!;
+    const loginError = root.querySelector<HTMLElement>('[data-login-error]')!;
+    const listingsView = root.querySelector<HTMLElement>('[data-listings-view]')!;
+    const listingsBox = root.querySelector<HTMLElement>('[data-listings]')!;
+    const loading = root.querySelector<HTMLElement>('[data-loading]')!;
+    const listError = root.querySelector<HTMLElement>('[data-list-error]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const template = root.querySelector<HTMLTemplateElement>('[data-listing-template]')!;
+
+    let userId: string | null = null;
+    let linkSent = false;
+    let cooldownSeconds = 0;
+
+    function renderLoginButton() {
+      loginSubmit.disabled = cooldownSeconds > 0;
+      loginSubmit.textContent =
+        cooldownSeconds > 0
+          ? `Erneut senden in ${cooldownSeconds}s`
+          : linkSent
+            ? 'Link erneut senden'
+            : 'Link senden';
+    }
+
+    const cooldown = watchLoginLinkCooldown(
+      () => loginEmail.value,
+      (remaining) => {
+        cooldownSeconds = remaining;
+        renderLoginButton();
+      },
+    );
+    loginEmail.addEventListener('input', cooldown.update);
+
+    function setError(message: string | null) {
+      listError.textContent = message ?? '';
+      listError.hidden = message === null;
+    }
+
+    function renderListings(listings: Listing[]) {
+      listingsBox.replaceChildren();
+      empty.hidden = listings.length > 0;
+
+      for (const listing of listings) {
+        const node = template.content.cloneNode(true) as DocumentFragment;
+        const article = node.querySelector<HTMLElement>('article')!;
+        const label = `${listing.brand} ${listing.model}`;
+
+        node.querySelector<HTMLElement>('[data-title]')!.textContent = label;
+        node.querySelector<HTMLElement>('[data-meta]')!.textContent =
+          `${listing.year} · ${formatKm(listing.mileage)} · ${formatCHF(listing.price)} · ${listing.location}`;
+        node
+          .querySelector<HTMLAnchorElement>('[data-view-link]')!
+          .setAttribute('href', `/listings/${listing.id}`);
+        node
+          .querySelector<HTMLAnchorElement>('[data-edit-link]')!
+          .setAttribute('href', `/account/listings/${listing.id}/edit`);
+
+        const remove = node.querySelector<HTMLButtonElement>('[data-delete]')!;
+        remove.addEventListener('click', async () => {
+          setError(null);
+          const confirmed = window.confirm(
+            `Möchtest du das Inserat „${label}“ wirklich löschen? Bilder und Batteriezertifikat werden ebenfalls entfernt.`,
+          );
+          if (!confirmed) return;
+
+          remove.disabled = true;
+          try {
+            await deleteListing(listing.id, userId);
+            await load();
+          } catch (error) {
+            setError(germanErrorMessage(error, 'Inserat konnte nicht gelöscht werden'));
+            remove.disabled = false;
+          }
+        });
+
+        listingsBox.append(article);
+      }
+    }
+
+    async function load() {
+      if (!userId) return;
+      loading.hidden = false;
+      try {
+        renderListings(await fetchMyListings(userId));
+      } catch (error) {
+        setError(germanErrorMessage(error, 'Inserate konnten nicht geladen werden'));
+      } finally {
+        loading.hidden = true;
+      }
+    }
+
+    onUserChange((user) => {
+      userId = user?.id ?? null;
+      signOut.hidden = user === null;
+      loginForm.hidden = user !== null;
+      listingsView.hidden = user === null;
+      if (user) void load();
+      else listingsBox.replaceChildren();
+    });
+
+    signOut.addEventListener('click', () => void supabase.auth.signOut());
+
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      loginError.hidden = true;
+      try {
+        await sendLoginLink(loginEmail.value);
+        linkSent = true;
+        loginSent.hidden = false;
+      } catch (error) {
+        loginError.textContent = germanErrorMessage(
+          error,
+          'Login-Link konnte nicht gesendet werden',
+        );
+        loginError.hidden = false;
+      } finally {
+        cooldown.update();
+      }
+    });
+  }
+</script>

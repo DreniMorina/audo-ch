@@ -1,17 +1,42 @@
 ---
+import Layout from '@/layouts/Layout.astro';
+import Hero from '@/components/home/Hero.astro';
+import TrustStrip from '@/components/home/TrustStrip.astro';
+import Featured from '@/components/home/Featured.astro';
+import WhyEvOnly from '@/components/home/WhyEvOnly.astro';
+import BatteryTrust from '@/components/home/BatteryTrust.astro';
+import FaqSection from '@/components/home/FaqSection.astro';
+import SellCTA from '@/components/home/SellCTA.astro';
+import { faqJsonLd } from '@/components/home/faq';
+import { fetchApprovedListings, type Listing } from '@/data/listings';
 
+// Rendered per request so the listing grid and the counters are in the HTML itself
+// rather than fetched by the browser after load.
+export const prerender = false;
+
+// A failing query must not take the page down: the grid degrades to empty, exactly as
+// it did while the data was loaded in the browser.
+let listings: Listing[] = [];
+try {
+  listings = await fetchApprovedListings();
+} catch (error) {
+  console.error('[index] Failed to load listings', error);
+}
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+  title="Elektroauto kaufen & verkaufen Schweiz | Audo.ch"
+  description="Der Schweizer Marktplatz für Elektroautos. Finde gebrauchte und neue E-Autos oder verkaufe dein Elektroauto einfach online."
+  path="/"
+  jsonLd={[faqJsonLd()]}
+>
+  <main>
+    <Hero listings={listings} />
+    <TrustStrip />
+    <Featured listings={listings} />
+    <WhyEvOnly />
+    <BatteryTrust />
+    <FaqSection />
+    <SellCTA />
+  </main>
+</Layout>

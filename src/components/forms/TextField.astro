@@ -1,0 +1,26 @@
+---
+interface Props {
+  name: string;
+  type?: astroHTML.JSX.InputHTMLAttributes['type'];
+  placeholder?: string;
+  required?: boolean;
+  /** Mirrors the database constraints on `listings`; the database decides. */
+  min?: number;
+  max?: number;
+}
+
+const { name, type = 'text', placeholder, required = false, min, max } = Astro.props;
+const label = required && placeholder ? `${placeholder} *` : placeholder;
+const ariaLabel = required && placeholder ? `${placeholder} Pflichtfeld` : placeholder;
+---
+
+<input
+  name={name}
+  type={type}
+  required={required}
+  min={min}
+  max={max}
+  placeholder={label}
+  aria-label={ariaLabel}
+  class="h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-foreground/40 focus:ring-4 focus:ring-electric/20"
+/>

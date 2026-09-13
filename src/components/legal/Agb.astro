@@ -1,0 +1,422 @@
+---
+const platformFeatures = [
+  "das Veröffentlichen von Inseraten für Elektrofahrzeuge,",
+  "das Suchen und Vergleichen von Fahrzeugen,",
+  "die Kontaktaufnahme zwischen Käufern und Verkäufern.",
+];
+
+const userRegistrationObligations = [
+  "wahrheitsgemässe Angaben zu machen,",
+  "seine Zugangsdaten sorgfältig aufzubewahren,",
+  "keine fremden Benutzerkonten zu verwenden,",
+  "Änderungen seiner Angaben aktuell zu halten.",
+];
+
+const listingConfirmations = [
+  "dass er berechtigt ist, das Fahrzeug anzubieten,",
+  "dass sämtliche Angaben nach bestem Wissen richtig und vollständig sind,",
+  "dass hochgeladene Bilder das angebotene Fahrzeug zeigen,",
+  "dass keine Rechte Dritter verletzt werden.",
+];
+
+const prohibitedListings = [
+  "falsche oder irreführende Angaben,",
+  "manipulierte Fahrzeugdaten,",
+  "Fake-Inserate,",
+  "Fahrzeuge, die keine vollelektrischen Fahrzeuge sind,",
+  "rechtswidrige Inhalte,",
+  "beleidigende Inhalte,",
+  "Werbung für andere Plattformen,",
+  "automatisierte Inserate ohne Zustimmung der Betreiberin.",
+];
+
+const moderationActions = [
+  "Inserate zu bearbeiten,",
+  "Inserate auszublenden,",
+  "Inserate zu sperren,",
+  "Inserate zu löschen,",
+  "Benutzerkonten einzuschränken oder zu sperren,",
+];
+
+const excludedResponsibilities = [
+  "den Vertragsabschluss,",
+  "den Fahrzeugzustand,",
+  "den Batteriezustand,",
+  "Garantien,",
+  "Fahrzeughistorien,",
+  "Kilometerstände,",
+  "Reichweitenangaben,",
+  "Ladeleistungen,",
+  "Kaufpreise,",
+  "Zahlungen,",
+  "Fahrzeugübergaben,",
+  "Gewährleistungsansprüche.",
+];
+
+const userObligations = [
+  "ausschliesslich rechtmässige Inhalte zu veröffentlichen,",
+  "keine Rechte Dritter zu verletzen,",
+  "die Plattform nicht missbräuchlich zu verwenden,",
+  "keine Schadsoftware zu verbreiten,",
+  "keine Bots oder automatisierte Systeme einzusetzen,",
+  "keine technischen Schutzmassnahmen zu umgehen.",
+];
+
+const warrantyExclusions = [
+  "Richtigkeit,",
+  "Vollständigkeit,",
+  "Aktualität,",
+  "Verfügbarkeit,",
+  "Fehlerfreiheit oder",
+  "Qualität",
+];
+
+const liabilityExclusions = [
+  "falsche Inserate,",
+  "fehlerhafte Fahrzeugangaben,",
+  "Betrug durch Dritte,",
+  "entgangene Geschäfte,",
+  "Datenverlust,",
+  "technische Ausfälle,",
+  "Unterbrüche der Plattform,",
+  "indirekte Schäden oder Folgeschäden.",
+];
+
+const platformChanges = [
+  "Funktionen zu ändern,",
+  "Funktionen einzustellen,",
+  "neue Funktionen einzuführen,",
+  "Inhalte anzupassen,",
+  "die Plattform jederzeit weiterzuentwickeln.",
+];
+---
+
+<main class="flex-1">
+  <div class="mx-auto max-w-3xl px-6 py-20">
+    <h1 class="font-display text-4xl font-semibold">Allgemeine Geschäftsbedingungen</h1>
+    <p class="mt-4 text-sm text-muted-foreground">Stand: 28. Juni 2026</p>
+
+    <div class="mt-10 space-y-10 text-sm leading-relaxed text-foreground">
+      <section>
+        <h2 class="font-display text-lg font-semibold">1. Geltungsbereich</h2>
+        <p class="mt-2 text-muted-foreground">
+          Diese Allgemeinen Geschäftsbedingungen (AGB) regeln die Nutzung der Online-Plattform{" "}
+          <strong>Audo.ch</strong>.
+        </p>
+        <div class="mt-4 space-y-1 text-muted-foreground">
+          <p>Audo.ch wird betrieben von:</p>
+          <p>
+            <strong>yulci GmbH</strong>
+            <br />
+            Neuhausen am Rheinfall
+            <br />
+            Schweiz
+          </p>
+          <p>
+            Handelsregister-Nr.: <strong>CHE-223.944.232</strong>
+          </p>
+          <p>
+            Vertretungsberechtigte Person: <strong>Dreni Morina</strong>
+          </p>
+          <p>
+            E-Mail:{" "}
+            <a class="underline" href="mailto:hallo@audo.ch">
+              hallo@audo.ch
+            </a>
+          </p>
+        </div>
+        <p class="mt-4 text-muted-foreground">
+          Mit dem Zugriff auf die Plattform oder der Registrierung eines Benutzerkontos
+          akzeptierst du diese AGB.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">2. Leistungsbeschreibung</h2>
+        <p class="mt-2 text-muted-foreground">
+          Audo.ch ist ein unabhängiger Online-Marktplatz für Elektrofahrzeuge.
+        </p>
+        <p class="mt-4 text-muted-foreground">Die Plattform ermöglicht insbesondere:</p>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          {platformFeatures.map((feature) => (
+            <li>{feature}</li>
+          ))}
+        </ul>
+        <p class="mt-4 text-muted-foreground">
+          Die yulci GmbH verkauft selbst keine Fahrzeuge und tritt zu keinem Zeitpunkt als
+          Käufer, Verkäufer, Vermittler oder Vertreter einer Vertragspartei auf.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Kaufverträge kommen ausschliesslich zwischen Käufer und Verkäufer zustande.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">3. Registrierung</h2>
+        <p class="mt-2 text-muted-foreground">
+          Für das Erstellen und Verwalten von Inseraten ist eine Registrierung erforderlich.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Die Anmeldung erfolgt mittels E-Mail-Verifizierung (One-Time Password / OTP).
+        </p>
+        <p class="mt-4 text-muted-foreground">Der Nutzer verpflichtet sich,</p>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          {userRegistrationObligations.map((obligation) => (
+            <li>{obligation}</li>
+          ))}
+        </ul>
+        <p class="mt-4 text-muted-foreground">
+          Ein Anspruch auf Registrierung besteht nicht.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">4. Inserate</h2>
+        <p class="mt-2 text-muted-foreground">
+          Auf Audo.ch dürfen ausschliesslich Elektrofahrzeuge veröffentlicht werden.
+        </p>
+        <p class="mt-4 text-muted-foreground">Der Inserent bestätigt insbesondere,</p>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          {listingConfirmations.map((confirmation) => (
+            <li>{confirmation}</li>
+          ))}
+        </ul>
+        <p class="mt-4 text-muted-foreground">Unzulässig sind insbesondere:</p>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          {prohibitedListings.map((prohibitedListing) => (
+            <li>{prohibitedListing}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">
+          5. Veröffentlichung von Inseraten
+        </h2>
+        <p class="mt-2 text-muted-foreground">
+          Inserate werden nach erfolgreicher Übermittlung grundsätzlich automatisch
+          veröffentlicht.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Die yulci GmbH behält sich jedoch jederzeit das Recht vor,
+        </p>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          {moderationActions.map((action) => (
+            <li>{action}</li>
+          ))}
+        </ul>
+        <p class="mt-4 text-muted-foreground">
+          wenn Anhaltspunkte für Missbrauch, Betrug, Spam, Gesetzesverstösse oder Verstösse
+          gegen diese AGB bestehen.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Ein Anspruch auf Veröffentlichung besteht nicht.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">6. Kaufverträge</h2>
+        <p class="mt-2 text-muted-foreground">
+          Audo.ch stellt ausschliesslich die technische Plattform zur Verfügung.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Sämtliche Kaufverträge werden ausschliesslich zwischen Käufer und Verkäufer
+          abgeschlossen.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Die yulci GmbH übernimmt insbesondere keine Verantwortung für:
+        </p>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          {excludedResponsibilities.map((responsibility) => (
+            <li>{responsibility}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">7. Gebühren</h2>
+        <p class="mt-2 text-muted-foreground">
+          Die Nutzung von Audo.ch ist zum Zeitpunkt der Veröffentlichung grundsätzlich
+          kostenlos.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Die yulci GmbH behält sich das Recht vor, künftig für einzelne oder sämtliche
+          Leistungen der Plattform Gebühren zu erheben. Dies kann insbesondere Gebühren für
+          Inserate, Zusatzleistungen oder die Nutzung bestimmter Funktionen durch Inserenten
+          und/oder Suchende umfassen.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Allfällige kostenpflichtige Leistungen werden mindestens zwei (2) Monate vor deren
+          Einführung angekündigt.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Die jeweils gültigen Preise werden transparent auf der Plattform veröffentlicht.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Für Leistungen, welche zum Zeitpunkt ihrer Nutzung kostenlos angeboten wurden,
+          entstehen nachträglich keine Gebühren.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">8. Pflichten der Nutzer</h2>
+        <p class="mt-2 text-muted-foreground">Nutzer verpflichten sich,</p>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          {userObligations.map((obligation) => (
+            <li>{obligation}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">9. Geistiges Eigentum</h2>
+        <p class="mt-2 text-muted-foreground">
+          Die Plattform Audo.ch sowie sämtliche Inhalte, Designs, Logos und Software
+          unterliegen den Urheberrechten und sonstigen Schutzrechten der yulci GmbH oder der
+          jeweiligen Rechteinhaber.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Durch das Hochladen von Bildern, Texten und Inseratsdaten räumt der Nutzer der yulci
+          GmbH ein unentgeltliches, nicht exklusives und zeitlich auf die Veröffentlichung des
+          Inserats beschränktes Nutzungsrecht ein, soweit dies für den Betrieb, die
+          Darstellung und Bewerbung der Plattform erforderlich ist.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">10. Haftung</h2>
+        <p class="mt-2 text-muted-foreground">
+          Die Nutzung der Plattform erfolgt auf eigenes Risiko.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Die yulci GmbH übernimmt keine Gewähr für
+        </p>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          {warrantyExclusions.map((exclusion) => (
+            <li>{exclusion}</li>
+          ))}
+        </ul>
+        <p class="mt-4 text-muted-foreground">der veröffentlichten Inhalte.</p>
+        <p class="mt-4 text-muted-foreground">
+          Insbesondere haftet die yulci GmbH nicht für:
+        </p>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          {liabilityExclusions.map((exclusion) => (
+            <li>{exclusion}</li>
+          ))}
+        </ul>
+        <p class="mt-4 text-muted-foreground">
+          Soweit gesetzlich zulässig, wird jegliche Haftung ausgeschlossen.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Die Haftung für Vorsatz oder grobe Fahrlässigkeit bleibt vorbehalten.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">11. Verfügbarkeit</h2>
+        <p class="mt-2 text-muted-foreground">
+          Die yulci GmbH ist bemüht, eine möglichst hohe Verfügbarkeit der Plattform
+          sicherzustellen.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Ein Anspruch auf einen unterbrechungsfreien oder jederzeit verfügbaren Betrieb
+          besteht jedoch nicht.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Wartungsarbeiten, Sicherheitsupdates oder technische Störungen können vorübergehend
+          zu Einschränkungen führen.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">12. Datenschutz</h2>
+        <p class="mt-2 text-muted-foreground">
+          Die Bearbeitung personenbezogener Daten erfolgt gemäss der jeweils gültigen
+          Datenschutzerklärung von Audo.ch.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">13. Änderungen der Plattform</h2>
+        <p class="mt-2 text-muted-foreground">
+          Die yulci GmbH behält sich das Recht vor,
+        </p>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          {platformChanges.map((change) => (
+            <li>{change}</li>
+          ))}
+        </ul>
+        <p class="mt-4 text-muted-foreground">
+          Hieraus entstehen keine Ansprüche gegenüber der Betreiberin.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">14. Änderungen der AGB</h2>
+        <p class="mt-2 text-muted-foreground">
+          Die yulci GmbH kann diese Allgemeinen Geschäftsbedingungen jederzeit anpassen.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Änderungen werden auf Audo.ch veröffentlicht und treten mit ihrer Veröffentlichung
+          oder zum angegebenen Zeitpunkt in Kraft.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">15. Salvatorische Klausel</h2>
+        <p class="mt-2 text-muted-foreground">
+          Sollten einzelne Bestimmungen dieser AGB ganz oder teilweise unwirksam oder
+          undurchführbar sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen
+          hiervon unberührt.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Anstelle der unwirksamen Bestimmung gilt diejenige gesetzlich zulässige Regelung als
+          vereinbart, welche dem wirtschaftlichen Zweck der unwirksamen Bestimmung am nächsten
+          kommt.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">
+          16. Anwendbares Recht und Gerichtsstand
+        </h2>
+        <p class="mt-2 text-muted-foreground">
+          Es gilt ausschliesslich schweizerisches Recht.
+        </p>
+        <p class="mt-4 text-muted-foreground">
+          Gerichtsstand für sämtliche Streitigkeiten aus oder im Zusammenhang mit diesen AGB
+          oder der Nutzung der Plattform ist, soweit gesetzlich zulässig,
+          <strong> Schaffhausen (SH), Schweiz</strong>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-lg font-semibold">Kontakt</h2>
+        <div class="mt-2 space-y-1 text-muted-foreground">
+          <p>
+            <strong>Audo.ch</strong>
+          </p>
+          <p>betrieben durch</p>
+          <p>
+            <strong>yulci GmbH</strong>
+          </p>
+          <p>Neuhausen am Rheinfall</p>
+          <p>Schweiz</p>
+          <p>
+            E-Mail:{" "}
+            <a class="underline" href="mailto:hallo@audo.ch">
+              hallo@audo.ch
+            </a>
+          </p>
+          <p>
+            Handelsregister: <strong>CHE-223.944.232</strong>
+          </p>
+          <p>
+            Vertretungsberechtigte Person: <strong>Dreni Morina</strong>
+          </p>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>

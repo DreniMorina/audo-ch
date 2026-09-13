@@ -1,43 +1,76 @@
-# Astro Starter Kit: Minimal
+# audo.ch
+
+Der Schweizer Marktplatz für Elektroautos. Reines Astro — kein UI-Framework, keine Hydration.
+
+## Setup
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+cp .env.example .env   # Supabase-Keys eintragen
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+| Befehl            | Aktion                                     |
+| :---------------- | :----------------------------------------- |
+| `npm run dev`     | Dev-Server auf http://localhost:4321       |
+| `npm run build`   | Production-Build (Vercel-Output)           |
+| `npm run preview` | Build lokal ansehen                        |
+| `npm run astro`   | Astro-CLI (`astro check`, `astro add`, …)  |
 
-## 🚀 Project Structure
+## Architektur
 
-Inside of your Astro project, you'll see the following folders and files:
+Jede Seite und jede Komponente ist `.astro`. Interaktive Teile bekommen ein `<script>`,
+das sein Markup über `data-*`-Attribute findet und Zustände umschaltet — es gibt kein
+Client-Rendering und keine Hydration.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+Marktplatzdaten werden serverseitig im Frontmatter geladen, die Inserate stehen also im
+HTML. Supabase-Aufrufe im Browser gibt es nur dort, wo eine Session nötig ist: Login,
+Inserat anlegen/bearbeiten/löschen und Datei-Uploads.
+
+```
+src/
+├── pages/            Astro-Routen: URL, SEO-Head
+│   ├── index.astro                  SSR – Inserate serverseitig gerendert
+│   ├── browse.astro                 SSR – Inserate + Filter aus der Query-String
+│   ├── listings/[id].astro          SSR – Inserat serverseitig, echte 404
+│   ├── account/                     Konto & Inserat bearbeiten
+│   └── sitemap.xml.ts               SSR – statische Seiten + alle freigegebenen Inserate
+├── layouts/Layout.astro             HTML-Shell, Meta-Tags, Canonical, JSON-LD, Header/Footer
+├── components/
+│   ├── icons/                       Inline-SVG-Icons (Icon.astro + icons.ts)
+│   ├── forms/                       Felder und Upload-Widgets
+│   ├── site/                        Header, Footer, Karte, Consent, Analytics
+│   ├── home/ browse/ listing/ sell/ account/ legal/
+├── data/             Supabase-Zugriff auf Inserate, Bilder und Zertifikate
+├── lib/              SEO, Auth, Consent, Formatierung, Fehlermeldungen, Upload-Verhalten
+├── middleware.ts     www→Apex-Redirect und Rate-Limit (nur für SSR-Routen)
+└── styles/global.css Design-System (Tailwind v4 Theme)
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Rendering-Modus
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Alle Seiten werden vorgerendert, ausser:
 
-Any static assets, like images, can be placed in the `public/` directory.
+| Route                            | Grund                                                  |
+| :------------------------------- | :----------------------------------------------------- |
+| `/`                              | Inserate und Zähler kommen aus der Datenbank            |
+| `/browse`                        | Inserate + Startfilter aus `?q=`, `?brand=`, …          |
+| `/listings/[id]`                 | Inserat serverseitig laden, 404 für gelöschte Inserate  |
+| `/account/listings/[id]/edit`    | Dynamische ID ohne bekannte Pfadliste                   |
+| `/sitemap.xml`                   | Enthält alle aktuell freigegebenen Inserate             |
 
-## 🧞 Commands
+### Client-JavaScript
 
-All commands are run from the root of the project, from a terminal:
+| Seiten                              | JS     |
+| :---------------------------------- | :----- |
+| Statische Seiten (AGB, SEO, 404, …) | 2,5 kB |
+| Konto, Inserat erstellen/bearbeiten | 225 kB (davon 224 kB Supabase-Client für Auth und Uploads) |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Umgebungsvariablen
 
-## 👀 Want to learn more?
+Siehe `.env.example`. Die `VITE_*`-Namen aus dem bisherigen Deployment funktionieren weiter:
+`astro.config.mjs` setzt `envPrefix: ['PUBLIC_', 'VITE_']`.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Datenbank
+
+Die Supabase-Migrationen liegen unter `supabase/migrations/`.

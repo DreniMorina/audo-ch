@@ -1,0 +1,8 @@
+ALTER TABLE public.listings ALTER COLUMN country SET DEFAULT 'CH';
+
+UPDATE public.listings SET country='CH', location='Zürich',    description='Erstbesitz, scheckheftgepflegt, AHK, Premium-Innenraum. Aktueller Batteriebericht vorhanden.'         WHERE brand='Tesla'      AND model='Model 3 Long Range';
+UPDATE public.listings SET country='CH', location='Bern',      description='Vorführwagen mit voller Herstellergarantie. Wärmepumpe und AR-HUD.'                                  WHERE brand='Hyundai'    AND model='Ioniq 5 Techniq';
+UPDATE public.listings SET country='CH', location='Basel',     description='Familien-EV mit grossem Kofferraum. AHK, Wärmepumpe, IQ.Light-Matrix.'                              WHERE brand='Volkswagen' AND model='ID.4 Pro Performance';
+UPDATE public.listings SET country='CH', location='Lausanne',  description='Sportlimousine in Top-Zustand. Adaptives Fahrwerk, Harman/Kardon, Head-Up Display.'                  WHERE brand='BMW'        AND model='i4 eDrive40';
+UPDATE public.listings SET country='CH', location='Luzern',    description='Performance-Limousine mit Allrad und voller Garantie. Pilot- und Plus-Paket.'                       WHERE brand='Audi'       AND model='e-tron GT quattro';
+UPDATE public.listings SET country='CH', location='Zürich',    description='Premium-EV mit 800-V-Architektur. Performance Battery Plus, Air Suspension.'                       WHERE brand='Porsche'    AND model='Taycan 4S';

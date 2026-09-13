@@ -1,0 +1,27 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import BrowsePage from '@/components/browse/BrowsePage.astro';
+import { parseBrowseSearch } from '@/lib/browse-search';
+import { fetchApprovedListings, type Listing } from '@/data/listings';
+
+// Rendered per request: the listings are in the HTML and the filters this page opens
+// with come from the query string.
+export const prerender = false;
+
+const search = parseBrowseSearch(Astro.url.searchParams);
+
+let listings: Listing[] = [];
+try {
+  listings = await fetchApprovedListings();
+} catch (error) {
+  console.error('[browse] Failed to load listings', error);
+}
+---
+
+<Layout
+  title="Gebrauchte Elektroautos kaufen in der Schweiz — audo.ch"
+  description="Suche gebrauchte Elektroautos in der Schweiz und filtere nach Marke, Preis, Reichweite, Batterie und Ladeleistung."
+  path="/browse"
+>
+  <BrowsePage listings={listings} search={search} />
+</Layout>

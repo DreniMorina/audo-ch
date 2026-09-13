@@ -1,20 +1,144 @@
-@import "tailwindcss";
-@font-face {
-  font-family: "DM Sans";
-  src: url("/fonts/DMSans-VariableFont_opsz,wght.ttf") format("truetype");
-  font-style: normal;
-  font-weight: 100 1000;
-  font-display: swap;
+@import "tailwindcss" source(none);
+@source "../";
+
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-electric: var(--electric);
+  --color-electric-foreground: var(--electric-foreground);
+  --color-graphite: var(--graphite);
+  --color-silver: var(--silver);
+  --color-silver-light: var(--silver-light);
 }
 
-@font-face {
-  font-family: "DM Sans";
-  src: url("/fonts/DMSans-Italic-VariableFont_opsz,wght.ttf") format("truetype");
-  font-style: italic;
-  font-weight: 100 1000;
-  font-display: swap;
+:root {
+  --radius: 0.75rem;
+
+  /* Brand */
+  --graphite: oklch(0.24 0.02 250);          /* #1F2328 */
+  --silver: oklch(0.82 0.008 245);           /* #C7CCD1 */
+  --silver-light: oklch(0.94 0.005 245);     /* #EEF1F4 */
+  --electric: oklch(0.84 0.16 210);          /* ~ #6EE7F9 */
+  --electric-foreground: oklch(0.24 0.01 250);
+
+  --background: oklch(0.985 0.002 240);      /* near #F8F9FA */
+  --foreground: var(--graphite);
+
+  --card: oklch(1 0 0);
+  --card-foreground: var(--graphite);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--graphite);
+
+  --primary: var(--graphite);
+  --primary-foreground: oklch(0.985 0.002 240);
+
+  --secondary: var(--silver-light);
+  --secondary-foreground: var(--graphite);
+
+  --muted: var(--silver-light);
+  --muted-foreground: oklch(0.45 0.01 250);
+
+  --accent: var(--electric);
+  --accent-foreground: var(--graphite);
+
+  --destructive: oklch(0.6 0.22 27);
+  --destructive-foreground: oklch(0.985 0.002 240);
+
+  --border: oklch(0.9 0.005 245);
+  --input: oklch(0.9 0.005 245);
+  --ring: var(--electric);
+
+  --gradient-hero: linear-gradient(
+    180deg,
+    oklch(0.98 0.003 245),
+    oklch(0.985 0.002 240)
+  );
+  --gradient-accent: linear-gradient(
+    135deg,
+    var(--electric),
+    color-mix(in oklab, var(--electric) 60%, white)
+  );
+  --shadow-card: 0 1px 3px oklch(0.24 0.01 250 / 0.06),
+    0 4px 12px -4px oklch(0.24 0.01 250 / 0.1);
+  --shadow-elevated: 0 2px 4px oklch(0.24 0.01 250 / 0.06),
+    0 16px 32px -16px oklch(0.24 0.01 250 / 0.15);
+  --shadow-glow: 0 0 0 1px color-mix(in oklab, var(--electric) 25%, transparent);
 }
 
-html {
-  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-feature-settings: "cv11", "ss01", "ss03";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-hero {
+    background-image: var(--gradient-hero);
+  }
+  .bg-gradient-accent {
+    background-image: var(--gradient-accent);
+  }
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
 }

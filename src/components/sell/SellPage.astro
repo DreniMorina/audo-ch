@@ -1,0 +1,405 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+import FormSection from '@/components/forms/FormSection.astro';
+import RequiredHint from '@/components/forms/RequiredHint.astro';
+import TextField from '@/components/forms/TextField.astro';
+import SelectField from '@/components/forms/SelectField.astro';
+import ImageUploadField from '@/components/forms/ImageUploadField.astro';
+import PdfUploadField from '@/components/forms/PdfUploadField.astro';
+import { MAX_LISTING_IMAGES } from '@/data/listings';
+import { POPULAR_EV_BRANDS } from '@/data/vehicle-brands';
+---
+
+<main data-sell class="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
+  <div data-view="form">
+    <div class="max-w-3xl">
+      <p class="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+        EV inserieren
+      </p>
+      <h1 class="mt-2 font-display text-4xl font-semibold leading-tight text-balance">
+        Verkaufe dein Elektroauto an die richtigen Käufer.
+      </h1>
+      <p class="mt-3 max-w-xl text-muted-foreground">
+        Im Early Access kostenlos. Melde dich per Magic Link an, veröffentliche dein Inserat direkt
+        und bearbeite es später in deinem Konto.
+      </p>
+    </div>
+
+    <form
+      hidden
+      data-login-form
+      class="mt-10 max-w-3xl space-y-4 rounded-3xl border border-border bg-card p-8 shadow-card"
+    >
+      <div>
+        <h2 class="font-display text-xl font-semibold">Mit E-Mail anmelden</h2>
+        <p class="mt-2 text-sm text-muted-foreground">
+          Wir senden dir einen sicheren Link. Danach kannst du Inserate erstellen, Fotos hochladen
+          und deine Angebote bearbeiten.
+        </p>
+      </div>
+      <input
+        type="email"
+        required
+        name="email"
+        placeholder="deine@email.ch"
+        class="h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-foreground/40 focus:ring-4 focus:ring-electric/20"
+      />
+      <p hidden data-login-sent class="text-sm text-muted-foreground">
+        Link gesendet. Bitte öffne ihn in deiner E-Mail. Falls er nicht ankommt, kannst du nach
+        kurzer Wartezeit einen neuen Link anfordern.
+      </p>
+      <p hidden data-login-error class="text-sm text-destructive"></p>
+      <button
+        type="submit"
+        data-login-submit
+        class="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 disabled:opacity-50"
+      >
+        Link senden
+      </button>
+    </form>
+
+    <form
+      hidden
+      data-listing-form
+      class="mt-10 max-w-3xl space-y-8 rounded-3xl border border-border bg-card p-8 shadow-card"
+    >
+      <FormSection title="Fahrzeug">
+        <RequiredHint />
+        <div class="grid gap-4 md:grid-cols-2">
+          <select
+            name="brand"
+            required
+            class="h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-foreground/40 focus:ring-4 focus:ring-electric/20"
+          >
+            <option value="" disabled selected>Marke auswählen *</option>
+            {POPULAR_EV_BRANDS.map((brand) => <option value={brand}>{brand}</option>)}
+          </select>
+          <TextField name="model" placeholder="Modell, z. B. Model 3 Long Range" required />
+          <TextField name="year" type="number" placeholder="Baujahr, z. B. 2022" required min={1990} max={2100} />
+          <TextField name="mileage" type="number" placeholder="Kilometerstand, z. B. 41200" required min={0} />
+        </div>
+      </FormSection>
+
+      <FormSection title="EV-Details">
+        <RequiredHint />
+        <div class="grid gap-4 md:grid-cols-3">
+          <TextField name="battery" type="number" placeholder="Batterie (kWh), z. B. 75" required min={0} />
+          <TextField name="range" type="number" placeholder="Reichweite (km), z. B. 480" required min={0} />
+          <TextField name="charging" type="number" placeholder="DC-Laden (kW), z. B. 250" required min={0} />
+          <SelectField name="fastCharging" label="Schnellladen" options={['Ja', 'Nein']} required />
+          <TextField
+            name="soh"
+            type="number"
+            placeholder="Batteriezustand (% SoH), z. B. 94 (optional)"
+            min={0}
+            max={100}
+          />
+          <TextField
+            name="certificateDate"
+            placeholder="Datum des Zertifikats, z. B. 12.04.2026 (optional)"
+          />
+          <TextField
+            name="certificateProvider"
+            placeholder="Prüfanbieter, z. B. Aviloo / TÜV (optional)"
+          />
+          <TextField name="warranty" type="number" placeholder="Restgarantie (Monate), z. B. 28" min={0} />
+          <div>
+            <select
+              name="sellerType"
+              class="h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-foreground/40 focus:ring-4 focus:ring-electric/20"
+            >
+              <option>Privat</option>
+              <option>Händler</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-4">
+          <p class="mb-2 text-xs text-muted-foreground">
+            Optional: offizielles Batteriezertifikat als PDF (max. 1 Datei).
+          </p>
+          <PdfUploadField />
+        </div>
+      </FormSection>
+
+      <FormSection title="Preis & Bilder">
+        <RequiredHint />
+        <div class="grid gap-4 md:grid-cols-2">
+          <TextField name="price" type="number" placeholder="Preis (CHF), z. B. 32900" required min={0} />
+          <TextField name="location" placeholder="Ort, z. B. Zürich" required />
+        </div>
+        <div class="mt-4">
+          <ImageUploadField totalMax={MAX_LISTING_IMAGES} required />
+        </div>
+      </FormSection>
+
+      <FormSection title="Kontakt">
+        <RequiredHint />
+        <div class="grid gap-4 md:grid-cols-2">
+          <TextField name="name" placeholder="Dein Name" required />
+          <TextField name="email" type="email" placeholder="E-Mail" required />
+          <TextField name="phone" type="tel" placeholder="Telefon" />
+        </div>
+      </FormSection>
+
+      <FormSection title="Beschreibung">
+        <label class="block space-y-2">
+          <span class="sr-only">Beschreibung</span>
+          <textarea
+            name="description"
+            rows="6"
+            placeholder="Erzähl kurz, was dein E-Auto besonders macht: Zustand, Servicehistorie, Ausstattung, Batterie, Ladeverhalten oder kleine Gebrauchsspuren."
+            class="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm leading-6 text-foreground shadow-sm outline-none placeholder:text-muted-foreground/75 focus:border-foreground/40 focus:ring-4 focus:ring-electric/20"
+          ></textarea>
+        </label>
+        <p class="mt-2 text-xs leading-5 text-muted-foreground">
+          Tipp: Ein ehrlicher, gut lesbarer Text schafft Vertrauen und hilft Käufern schneller zu
+          entscheiden.
+        </p>
+      </FormSection>
+
+      <div class="space-y-4 border-t border-border pt-6">
+        <label
+          class="flex items-start gap-3 rounded-xl border border-border bg-background/60 p-4 text-sm text-foreground"
+        >
+          <input
+            name="termsAccepted"
+            type="checkbox"
+            required
+            class="mt-0.5 h-4 w-4 rounded border-border accent-primary"
+          />
+          <span>
+            Ich bestätige die AGB und akzeptiere, dass mein Inserat direkt veröffentlicht wird.
+            <a href="/agb" class="ml-1 underline underline-offset-2 hover:text-primary">AGB lesen</a>
+          </span>
+        </label>
+
+        <div class="flex items-center justify-between gap-4">
+          <p class="text-xs text-muted-foreground">
+            <span data-submit-hint>
+              Mit dem Absenden bestätigst du die Richtigkeit der Angaben. Felder mit * und mindestens
+              1 Foto sind Pflicht. Angaben zum Batteriestatus und ein PDF-Zertifikat sind optional.
+              Dein Inserat wird direkt veröffentlicht.
+            </span>
+            <span hidden data-submit-error class="text-destructive"></span>
+          </p>
+          <button
+            type="submit"
+            data-listing-submit
+            class="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 disabled:opacity-50"
+          >
+            Inserat einreichen
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div hidden data-view="success">
+    <span
+      class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-electric/20 text-graphite"
+    >
+      <Icon name="CheckCircle2" class="h-7 w-7" />
+    </span>
+    <h1 class="mt-6 font-display text-3xl font-semibold">Inserat erhalten</h1>
+    <p class="mt-3 text-muted-foreground">
+      Danke — dein Inserat ist veröffentlicht und du kannst es in deinem Konto jederzeit bearbeiten.
+    </p>
+    <p
+      hidden
+      data-upload-warning
+      class="mx-auto mt-4 max-w-md rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+    >
+    </p>
+    <a
+      href="/account"
+      class="mt-8 inline-flex h-11 items-center rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground hover:opacity-90"
+    >
+      Meine Inserate
+    </a>
+  </div>
+</main>
+
+<script>
+  import {
+    submitListing,
+    uploadBatteryCertificate,
+    uploadListingImages,
+    validateListingImageFiles,
+  } from '@/data/listings';
+  import { onUserChange, sendLoginLink, watchLoginLinkCooldown } from '@/lib/auth';
+  import { germanErrorMessage, germanErrorMessageWithCause } from '@/lib/german-error';
+  import { createImagePicker, createPdfPicker } from '@/lib/upload-fields';
+
+  const root = document.querySelector<HTMLElement>('[data-sell]');
+  if (root) {
+    const formView = root.querySelector<HTMLElement>('[data-view="form"]')!;
+    const successView = root.querySelector<HTMLElement>('[data-view="success"]')!;
+    const loginForm = root.querySelector<HTMLFormElement>('[data-login-form]')!;
+    const listingForm = root.querySelector<HTMLFormElement>('[data-listing-form]')!;
+    const loginEmail = loginForm.querySelector<HTMLInputElement>('input[name="email"]')!;
+    const loginSubmit = root.querySelector<HTMLButtonElement>('[data-login-submit]')!;
+    const loginSent = root.querySelector<HTMLElement>('[data-login-sent]')!;
+    const loginError = root.querySelector<HTMLElement>('[data-login-error]')!;
+    const listingSubmit = root.querySelector<HTMLButtonElement>('[data-listing-submit]')!;
+    const submitHint = root.querySelector<HTMLElement>('[data-submit-hint]')!;
+    const submitError = root.querySelector<HTMLElement>('[data-submit-error]')!;
+    const uploadWarning = root.querySelector<HTMLElement>('[data-upload-warning]')!;
+
+    const images = createImagePicker(root.querySelector<HTMLElement>('[data-image-field]')!);
+    const certificate = createPdfPicker(root.querySelector<HTMLElement>('[data-pdf-field]')!);
+
+    let userId: string | null = null;
+    let busy = false;
+    let linkSent = false;
+    let cooldownSeconds = 0;
+
+    function renderLoginButton() {
+      loginSubmit.disabled = busy || cooldownSeconds > 0;
+      loginSubmit.textContent = busy
+        ? 'Wird gesendet…'
+        : cooldownSeconds > 0
+          ? `Erneut senden in ${cooldownSeconds}s`
+          : linkSent
+            ? 'Link erneut senden'
+            : 'Link senden';
+    }
+
+    const cooldown = watchLoginLinkCooldown(
+      () => loginEmail.value,
+      (remaining) => {
+        cooldownSeconds = remaining;
+        renderLoginButton();
+      },
+    );
+    loginEmail.addEventListener('input', cooldown.update);
+
+    onUserChange((user) => {
+      userId = user?.id ?? null;
+      loginForm.hidden = user !== null;
+      listingForm.hidden = user === null;
+    });
+
+    function setLoginError(message: string | null) {
+      loginError.textContent = message ?? '';
+      loginError.hidden = message === null;
+    }
+
+    function setSubmitError(message: string | null) {
+      submitError.textContent = message ?? '';
+      submitError.hidden = message === null;
+      submitHint.hidden = message !== null;
+    }
+
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      setLoginError(null);
+      busy = true;
+      renderLoginButton();
+      try {
+        await sendLoginLink(loginEmail.value);
+        linkSent = true;
+        loginSent.hidden = false;
+      } catch (error) {
+        setLoginError(germanErrorMessage(error, 'Login-Link konnte nicht gesendet werden'));
+      } finally {
+        busy = false;
+        cooldown.update();
+        renderLoginButton();
+      }
+    });
+
+    listingForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      setSubmitError(null);
+
+      const fd = new FormData(listingForm);
+      if (fd.get('termsAccepted') !== 'on') {
+        setSubmitError('Bitte bestätige die AGB, bevor du dein Inserat veröffentlichst.');
+        return;
+      }
+
+      // At least one photo is required so every public listing has a visual preview.
+      const photos = images.getFiles();
+      if (photos.length === 0) {
+        setSubmitError('Bitte lade mindestens 1 Foto hoch.');
+        return;
+      }
+
+      // Validate the selected files up front so we never publish a listing when a file
+      // is clearly invalid (wrong type, too large or too many).
+      try {
+        validateListingImageFiles(photos);
+      } catch (error) {
+        setSubmitError(germanErrorMessage(error, 'Bitte prüfe die ausgewählten Bilder.'));
+        return;
+      }
+
+      listingSubmit.disabled = true;
+      listingSubmit.textContent = 'Wird gesendet…';
+
+      const num = (key: string) => Number(fd.get(key) || 0);
+      const str = (key: string) => String(fd.get(key) || '').trim();
+
+      let listing: { id: string };
+      try {
+        listing = await submitListing(
+          {
+            brand: str('brand'),
+            model: str('model'),
+            year: num('year'),
+            mileage: num('mileage'),
+            battery_kwh: num('battery'),
+            range_km: num('range'),
+            charging_kw: num('charging'),
+            fast_charging: str('fastCharging') === 'Ja',
+            battery_health: fd.get('soh') ? num('soh') : null,
+            battery_certificate_date: str('certificateDate') || null,
+            battery_certificate_provider: str('certificateProvider') || null,
+            warranty_months: fd.get('warranty') ? num('warranty') : null,
+            seller_type: str('sellerType') === 'Händler' ? 'Dealer' : 'Private',
+            price: num('price'),
+            location: str('location'),
+            seller_name: str('name'),
+            seller_email: str('email'),
+            seller_phone: str('phone') || null,
+            description: str('description') || null,
+          },
+          userId,
+        );
+      } catch (error) {
+        // The listing itself could not be created — a real submission failure.
+        setSubmitError(germanErrorMessageWithCause(error, 'Übermittlung fehlgeschlagen'));
+        listingSubmit.disabled = false;
+        listingSubmit.textContent = 'Inserat einreichen';
+        return;
+      }
+
+      // The listing is published at this point. Image and certificate uploads are a
+      // best-effort follow-up: if they fail we still confirm the listing and let the
+      // seller retry the assets from their account instead of wrongly reporting that
+      // the whole submission failed.
+      let warning: string | null = null;
+      try {
+        const pdf = certificate.getFile();
+        if (userId) {
+          await uploadListingImages(listing.id, userId, photos);
+          if (pdf) await uploadBatteryCertificate(listing.id, userId, pdf);
+        }
+      } catch (error) {
+        warning = germanErrorMessage(
+          error,
+          'Einige Dateien konnten nicht hochgeladen werden. Du kannst sie in deinem Konto ergänzen.',
+        );
+      }
+
+      uploadWarning.textContent = warning ?? '';
+      uploadWarning.hidden = warning === null;
+      formView.hidden = true;
+      successView.hidden = false;
+      root.classList.remove('max-w-5xl', 'py-12');
+      root.classList.add('max-w-2xl', 'py-24', 'text-center');
+      listingSubmit.disabled = false;
+      listingSubmit.textContent = 'Inserat einreichen';
+    });
+  }
+</script>

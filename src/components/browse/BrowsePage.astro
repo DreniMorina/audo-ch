@@ -1,0 +1,275 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+import ListingCard from '@/components/site/ListingCard.astro';
+import type { Listing } from '@/data/listings';
+import type { BrowseSearch } from '@/lib/browse-search';
+
+interface Props {
+  listings: Listing[];
+  search: BrowseSearch;
+}
+
+const { listings, search } = Astro.props;
+
+const query = search.q ?? '';
+const brand = search.brand ?? 'Alle';
+const maxPrice = search.maxPrice ?? 150000;
+const minRange = search.minRange ?? 0;
+
+const brands = Array.from(new Set(listings.map((l) => l.brand))).sort();
+const sellerOptions = ['Alle', 'Privat', 'Händler'];
+---
+
+<main class="mx-auto w-full max-w-7xl flex-1 px-6 py-10" data-browse>
+  <div class="flex items-end justify-between gap-4">
+    <div>
+      <h1 class="font-display text-3xl font-semibold md:text-4xl">Elektroautos kaufen</h1>
+      <p class="mt-2 text-muted-foreground">
+        <span data-match-count>{listings.length}</span> von {listings.length} Fahrzeugen passen zu deinen
+        Filtern
+      </p>
+    </div>
+    <div class="relative hidden md:block">
+      <Icon
+        name="Search"
+        class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+      />
+      <input
+        data-filter="query"
+        value={query}
+        placeholder="Marke, Modell, Ort suchen…"
+        class="h-11 w-80 rounded-md border border-border bg-card pl-9 pr-4 text-sm outline-none focus:border-foreground/40 focus:ring-4 focus:ring-electric/20"
+      />
+    </div>
+  </div>
+
+  <div class="mt-8 grid gap-8 lg:grid-cols-[260px_1fr]">
+    <aside
+      class="space-y-6 rounded-2xl border border-border/70 bg-card p-5 shadow-card h-fit lg:sticky lg:top-20"
+    >
+      <div>
+        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          Marke
+        </p>
+        <select
+          data-filter="brand"
+          class="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-foreground/40"
+        >
+          <option selected={brand === 'Alle'}>Alle</option>
+          {brands.map((b) => <option selected={brand === b}>{b}</option>)}
+        </select>
+      </div>
+
+      <div>
+        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          Max. Preis · CHF <span data-label="maxPrice">{maxPrice.toLocaleString('de-CH')}</span>
+        </p>
+        <input
+          data-filter="maxPrice"
+          type="range"
+          min="10000"
+          max="150000"
+          step="1000"
+          value={maxPrice}
+          class="w-full accent-graphite"
+        />
+      </div>
+
+      <div>
+        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          Min. Reichweite · <span data-label="minRange">{minRange}</span> km
+        </p>
+        <input
+          data-filter="minRange"
+          type="range"
+          min="0"
+          max="600"
+          step="10"
+          value={minRange}
+          class="w-full accent-graphite"
+        />
+      </div>
+
+      <div>
+        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          Verkäufertyp
+        </p>
+        <div class="grid grid-cols-3 gap-1 rounded-md bg-secondary p-1 text-xs" data-seller-group>
+          {
+            sellerOptions.map((option) => (
+              <button
+                type="button"
+                data-seller={option}
+                class:list={[
+                  'h-8 rounded transition-all',
+                  option === 'Alle'
+                    ? 'bg-card font-medium text-foreground shadow-card'
+                    : 'text-muted-foreground',
+                ]}
+              >
+                {option}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <label class="flex cursor-pointer items-center justify-between text-sm">
+        <span>Nur Schnellladen</span>
+        <span data-toggle="fastOnly" class="relative h-6 w-10 rounded-full transition-colors bg-border">
+          <span
+            data-knob
+            class="absolute top-0.5 h-5 w-5 rounded-full bg-card shadow transition-transform translate-x-0.5"
+          ></span>
+        </span>
+      </label>
+
+      <label class="flex cursor-pointer items-center justify-between text-sm">
+        <span>Nur mit Batteriezertifikat</span>
+        <span
+          data-toggle="certificateOnly"
+          class="relative h-6 w-10 rounded-full transition-colors bg-border"
+        >
+          <span
+            data-knob
+            class="absolute top-0.5 h-5 w-5 rounded-full bg-card shadow transition-transform translate-x-0.5"
+          ></span>
+        </span>
+      </label>
+    </aside>
+
+    <div>
+      <div
+        data-empty
+        hidden
+        class="rounded-2xl border border-dashed border-border p-12 text-center text-muted-foreground"
+      >
+        Keine Fahrzeuge passen zu diesen Filtern. Erweitere deine Suche.
+      </div>
+      <div data-grid class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        {listings.map((listing) => <ListingCard listing={listing} />)}
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  type Filters = {
+    query: string;
+    brand: string;
+    maxPrice: number;
+    minRange: number;
+    seller: string;
+    fastOnly: boolean;
+    certificateOnly: boolean;
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-browse]');
+  if (root) {
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-listing]'));
+    const grid = root.querySelector<HTMLElement>('[data-grid]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const count = root.querySelector<HTMLElement>('[data-match-count]')!;
+
+    const control = <T extends HTMLElement>(name: string) =>
+      root.querySelector<T>(`[data-filter="${name}"]`)!;
+
+    const queryInput = control<HTMLInputElement>('query');
+    const brandSelect = control<HTMLSelectElement>('brand');
+    const maxPriceInput = control<HTMLInputElement>('maxPrice');
+    const minRangeInput = control<HTMLInputElement>('minRange');
+
+    const filters: Filters = {
+      query: queryInput.value,
+      brand: brandSelect.value,
+      maxPrice: Number(maxPriceInput.value),
+      minRange: Number(minRangeInput.value),
+      seller: 'Alle',
+      fastOnly: false,
+      certificateOnly: false,
+    };
+
+    function matches(card: HTMLElement) {
+      const data = card.dataset;
+      if (filters.brand !== 'Alle' && data.brand !== filters.brand) return false;
+      if (Number(data.price) > filters.maxPrice) return false;
+      if (Number(data.range) < filters.minRange) return false;
+      if (filters.seller !== 'Alle') {
+        const want = filters.seller === 'Händler' ? 'Dealer' : 'Private';
+        if (data.sellerType !== want) return false;
+      }
+      if (filters.fastOnly && data.fastCharging !== 'true') return false;
+      if (filters.certificateOnly && data.certificate !== 'true') return false;
+      if (filters.query && !data.haystack?.includes(filters.query.toLowerCase())) return false;
+      return true;
+    }
+
+    function apply() {
+      let visible = 0;
+      for (const card of cards) {
+        const shown = matches(card);
+        card.hidden = !shown;
+        if (shown) visible += 1;
+      }
+      count.textContent = String(visible);
+      empty.hidden = visible > 0;
+      grid.hidden = visible === 0;
+    }
+
+    function setLabel(name: string, value: string) {
+      root!.querySelector<HTMLElement>(`[data-label="${name}"]`)!.textContent = value;
+    }
+
+    queryInput.addEventListener('input', () => {
+      filters.query = queryInput.value;
+      apply();
+    });
+
+    brandSelect.addEventListener('change', () => {
+      filters.brand = brandSelect.value;
+      apply();
+    });
+
+    maxPriceInput.addEventListener('input', () => {
+      filters.maxPrice = Number(maxPriceInput.value);
+      setLabel('maxPrice', filters.maxPrice.toLocaleString('de-CH'));
+      apply();
+    });
+
+    minRangeInput.addEventListener('input', () => {
+      filters.minRange = Number(minRangeInput.value);
+      setLabel('minRange', String(filters.minRange));
+      apply();
+    });
+
+    const ACTIVE_SELLER = ['bg-card', 'font-medium', 'text-foreground', 'shadow-card'];
+
+    root.querySelectorAll<HTMLButtonElement>('[data-seller]').forEach((button) => {
+      button.addEventListener('click', () => {
+        filters.seller = button.dataset.seller!;
+        root.querySelectorAll<HTMLButtonElement>('[data-seller]').forEach((other) => {
+          const active = other === button;
+          other.classList.toggle('text-muted-foreground', !active);
+          ACTIVE_SELLER.forEach((cls) => other.classList.toggle(cls, active));
+        });
+        apply();
+      });
+    });
+
+    root.querySelectorAll<HTMLElement>('[data-toggle]').forEach((toggle) => {
+      const name = toggle.dataset.toggle as 'fastOnly' | 'certificateOnly';
+      const knob = toggle.querySelector<HTMLElement>('[data-knob]')!;
+      toggle.addEventListener('click', () => {
+        const on = !filters[name];
+        filters[name] = on;
+        toggle.classList.toggle('bg-graphite', on);
+        toggle.classList.toggle('bg-border', !on);
+        knob.classList.toggle('translate-x-[18px]', on);
+        knob.classList.toggle('translate-x-0.5', !on);
+        apply();
+      });
+    });
+
+    apply();
+  }
+</script>

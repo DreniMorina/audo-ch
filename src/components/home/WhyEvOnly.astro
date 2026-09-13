@@ -1,0 +1,50 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+import type { IconName } from '@/components/icons/icons';
+
+const features: Array<{ icon: IconName; title: string; body: string }> = [
+  {
+    icon: 'Filter',
+    title: 'Nur Elektro, nichts anderes',
+    body: 'Jedes Fahrzeug auf audo.ch ist vollelektrisch. Keine Verbrenner, die deine Suche verzögern — nur das, was du suchst.',
+  },
+  {
+    icon: 'Battery',
+    title: 'Batterie zuerst',
+    body: 'State of Health, nutzbare Kapazität und Degradationsverlauf — nicht nur Preis und Kilometerstand.',
+  },
+  {
+    icon: 'Zap',
+    title: 'Laden, das zählt',
+    body: 'DC-Spitzenleistung, AC-Bordlader und echte 10–80 %-Zeiten — für reale Reiseplanung statt Marketingzahlen.',
+  },
+  {
+    icon: 'BadgeCheck',
+    title: 'Transparente Garantie',
+    body: 'Restgarantie für Batterie und Antrieb in Monaten — klar sichtbar, nicht versteckt in Anhängen.',
+  },
+];
+---
+
+<section id="why" class="bg-secondary/40 py-24">
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="max-w-2xl">
+      <h2 class="font-display text-3xl font-semibold md:text-4xl">
+        Ein Marktplatz, der Elektroautos <span class="text-foreground/60">wirklich versteht.</span>
+      </h2>
+    </div>
+    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {
+        features.map((feature) => (
+          <div class="rounded-2xl border border-border/70 bg-card p-6 shadow-card">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-electric/15 text-graphite">
+              <Icon name={feature.icon} class="h-5 w-5" />
+            </span>
+            <h3 class="mt-5 font-display text-lg font-semibold">{feature.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{feature.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

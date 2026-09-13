@@ -1,0 +1,37 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+import { DROP_INPUT_CLASSES } from './field-classes';
+
+interface Props {
+  /** Prefix shown in front of the selected file name. */
+  selectedLabel?: string;
+}
+
+const { selectedLabel = 'Ausgewähltes PDF: ' } = Astro.props;
+---
+
+<div data-pdf-field data-selected-label={selectedLabel}>
+  <input type="file" accept="application/pdf" data-pdf-input class={DROP_INPUT_CLASSES} />
+  <p hidden data-pdf-error class="mt-2 text-sm text-destructive"></p>
+  <div
+    hidden
+    data-pdf-selected
+    class="mt-3 flex items-center justify-between gap-3 rounded-md border border-border bg-background px-3 py-2 text-xs text-muted-foreground"
+  >
+    <span class="flex min-w-0 items-center gap-2">
+      <Icon name="FileText" class="h-4 w-4 shrink-0" />
+      <span class="truncate">
+        {selectedLabel}<span data-pdf-name class="font-medium text-foreground"></span>
+      </span>
+    </span>
+    <button
+      type="button"
+      data-pdf-clear
+      class="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-1 font-medium text-destructive transition-colors hover:bg-destructive/10"
+    >
+      <Icon name="X" class="h-3.5 w-3.5" />
+      Entfernen
+    </button>
+  </div>
+  <p data-pdf-empty class="mt-3 text-xs text-muted-foreground">Noch kein PDF ausgewählt.</p>
+</div>

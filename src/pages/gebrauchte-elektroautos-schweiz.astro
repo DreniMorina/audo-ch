@@ -1,0 +1,40 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SeoLandingPage from '@/components/site/SeoLandingPage.astro';
+
+const sections = [
+  {
+    title: 'Occasionen ohne Verbrenner-Rauschen',
+    body: 'Audo.ch konzentriert sich auf Elektroautos, damit du schneller relevante gebrauchte E-Autos findest.',
+  },
+  {
+    title: 'Batteriezustand prüfen',
+    body: 'Batteriegesundheit und Kapazität sind zentrale Faktoren beim Kauf eines gebrauchten Elektroautos.',
+  },
+  {
+    title: 'Preis und Reichweite vergleichen',
+    body: 'Vergleiche Angebote nach Preis, Kilometerstand, Reichweite und Ladeleistung für eine bessere Kaufentscheidung.',
+  },
+  {
+    title: 'Schweizer Standorte',
+    body: 'Finde E-Auto Occasionen in deiner Nähe und kontaktiere private oder gewerbliche Verkäufer direkt.',
+  },
+];
+---
+
+<Layout
+  title="Gebrauchte Elektroautos Schweiz | E-Auto Occasion | Audo.ch"
+  description="Gebrauchte Elektroautos in der Schweiz finden: E-Auto Occasionen mit Preis, Reichweite, Batteriegesundheit, Ladeleistung und Standort vergleichen."
+  path="/gebrauchte-elektroautos-schweiz"
+>
+  <SeoLandingPage
+    eyebrow="Gebrauchte Elektroautos Schweiz"
+    title="Gebrauchte Elektroautos und E-Auto Occasionen in der Schweiz finden."
+    description="Finde geprüfte Elektroauto-Inserate mit den Daten, die beim Gebrauchtkauf zählen: Batterie, Reichweite, Ladeleistung und Garantie."
+    primaryCta="Gebrauchte E-Autos ansehen"
+    primaryTo="/browse"
+    secondaryCta="E-Auto inserieren"
+    secondaryTo="/elektroauto-verkaufen-schweiz"
+    sections={sections}
+  />
+</Layout>

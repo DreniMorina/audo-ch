@@ -1,0 +1,29 @@
+---
+import ListingDetail from '@/components/listing/ListingDetail.astro';
+import ListingMissing from '@/components/listing/ListingMissing.astro';
+import { fetchListing, fetchListingImages } from '@/data/listings';
+
+// Rendered per request. Loading the listing here (rather than in a client component)
+// is what puts it into the server-rendered HTML: crawlers receive the vehicle content
+// instead of a loading shell, and a removed listing answers a real 404 instead of a
+// soft 404 with status 200.
+export const prerender = false;
+
+const { id } = Astro.params;
+const path = `/listings/${id}`;
+
+const listing = id ? await fetchListing(id) : null;
+const listingImages = listing ? await fetchListingImages(listing.id) : [];
+
+if (!listing) {
+  Astro.response.status = 404;
+}
+---
+
+{
+  listing ? (
+    <ListingDetail listing={listing} listingImages={listingImages} path={path} />
+  ) : (
+    <ListingMissing path={path} />
+  )
+}

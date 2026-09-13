@@ -1,0 +1,46 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+import { MAX_LISTING_IMAGES } from '@/data/listings';
+import { DROP_INPUT_CLASSES } from './field-classes';
+
+interface Props {
+  /** Total images allowed on the listing, used in the helper copy. */
+  totalMax?: number;
+  /** Marks the image upload as required in the helper copy. */
+  required?: boolean;
+}
+
+const { totalMax = MAX_LISTING_IMAGES, required = false } = Astro.props;
+---
+
+<div data-image-field data-total-max={totalMax}>
+  <input
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    multiple
+    data-image-input
+    class={DROP_INPUT_CLASSES}
+  />
+  <p class="mt-2 text-xs text-muted-foreground">
+    {required ? '* Pflicht: mindestens 1 Foto. ' : ''}Bis zu {totalMax} Bilder, jeweils max. 5 MB (JPG,
+    PNG oder WebP). Das erste Bild erscheint als Titelbild.
+  </p>
+  <p hidden data-image-error class="mt-2 text-sm text-destructive"></p>
+  <div hidden data-image-previews class="mt-3 grid gap-3 sm:grid-cols-2"></div>
+  <p data-image-empty class="mt-3 text-xs text-muted-foreground">Noch keine Bilder ausgewählt.</p>
+
+  <template data-image-preview-template>
+    <figure class="relative rounded-xl border border-border bg-background p-2">
+      <button
+        type="button"
+        data-remove
+        class="absolute right-3 top-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-background/90 text-muted-foreground shadow-sm ring-1 ring-border transition-colors hover:bg-destructive hover:text-destructive-foreground"
+      >
+        <Icon name="X" class="h-4 w-4" />
+      </button>
+      <img data-preview-image class="h-28 w-full rounded-lg object-cover" />
+      <figcaption data-preview-caption class="mt-2 truncate text-xs text-muted-foreground">
+      </figcaption>
+    </figure>
+  </template>
+</div>

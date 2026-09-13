@@ -1,0 +1,396 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+import LabeledField from '@/components/forms/LabeledField.astro';
+import ImageUploadField from '@/components/forms/ImageUploadField.astro';
+import PdfUploadField from '@/components/forms/PdfUploadField.astro';
+import ExistingImageGallery from '@/components/forms/ExistingImageGallery.astro';
+import { MAX_LISTING_IMAGES } from '@/data/listings';
+import { POPULAR_EV_BRANDS } from '@/data/vehicle-brands';
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+
+const SELECT_CLASSES = 'h-11 w-full rounded-md border border-border bg-background px-3 text-sm';
+---
+
+<main data-edit data-listing-id={id} class="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
+  <p data-state="loading" class="text-muted-foreground">Wird geladen…</p>
+
+  <p hidden data-state="anonymous">
+    Bitte melde dich im <a href="/account" class="underline">Konto</a> an.
+  </p>
+
+  <p hidden data-state="missing">Inserat nicht gefunden.</p>
+
+  <div hidden data-state="ready">
+    <p class="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+      Inserat bearbeiten
+    </p>
+    <h1 data-heading class="mt-2 font-display text-4xl font-semibold"></h1>
+    <p
+      class="mt-3 rounded-2xl border border-border bg-secondary/50 p-4 text-sm text-muted-foreground"
+    >
+      Du bearbeitest dein Inserat für <span data-summary class="font-medium text-foreground"></span>
+      in <span data-location></span>. Alle aktuell gespeicherten Werte sind unten vorausgefüllt. Felder
+      mit * sind Pflicht.
+    </p>
+
+    <form
+      data-edit-form
+      class="mt-8 space-y-6 rounded-3xl border border-border bg-card p-8 shadow-card"
+    >
+      <div class="grid gap-4 md:grid-cols-2">
+        <label class="space-y-2 text-sm font-medium">
+          <span>Marke *</span>
+          <select name="brand" required class={`${SELECT_CLASSES} font-normal`}>
+            <option value="" disabled>Marke auswählen</option>
+            {POPULAR_EV_BRANDS.map((brand) => <option value={brand}>{brand}</option>)}
+          </select>
+        </label>
+        <LabeledField name="model" label="Modell" required />
+        <LabeledField name="year" label="Baujahr" type="number" required min={1990} max={2100} />
+        <LabeledField name="mileage" label="Kilometerstand" type="number" required min={0} />
+        <LabeledField name="battery" label="Batterie (kWh)" type="number" required min={0} />
+        <LabeledField name="range" label="Reichweite (km)" type="number" required min={0} />
+        <LabeledField name="charging" label="DC-Laden (kW)" type="number" required min={0} />
+        <label class="space-y-2 text-sm font-medium">
+          <span>Schnellladen *</span>
+          <select name="fastCharging" required class={`${SELECT_CLASSES} font-normal`}>
+            <option>Ja</option>
+            <option>Nein</option>
+          </select>
+        </label>
+        <LabeledField name="soh" label="Batteriezustand (% SoH)" type="number" min={0} max={100} />
+        <LabeledField name="certificateDate" label="Datum des Zertifikats" />
+        <LabeledField name="certificateProvider" label="Prüfanbieter" />
+        <LabeledField name="warranty" label="Restgarantie (Monate)" type="number" min={0} />
+        <LabeledField name="price" label="Preis (CHF)" type="number" required min={0} />
+        <LabeledField name="location" label="Ort" required />
+        <label class="space-y-2 text-sm font-medium">
+          <span>Verkäufertyp</span>
+          <select name="sellerType" class={SELECT_CLASSES}>
+            <option>Privat</option>
+            <option>Händler</option>
+          </select>
+        </label>
+        <LabeledField name="name" label="Kontaktname" required />
+        <LabeledField name="email" label="E-Mail" type="email" required />
+        <LabeledField name="phone" label="Telefon" type="tel" />
+      </div>
+
+      <div>
+        <h2 class="font-display text-lg font-semibold">Bilder *</h2>
+        <ExistingImageGallery />
+        <div class="mt-4">
+          <ImageUploadField totalMax={MAX_LISTING_IMAGES} />
+        </div>
+        <p class="mt-2 text-xs text-muted-foreground">
+          Mindestens 1 Foto ist Pflicht. Insgesamt bis zu {MAX_LISTING_IMAGES} Bilder. Neue Bilder werden
+          angehängt. Entfernst du oben ein Bild, wird wieder Platz für ein neues frei.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-display text-lg font-semibold">Batteriezertifikat</h2>
+        <div
+          hidden
+          data-certificate-current
+          class="mt-2 flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-background px-3 py-2 text-sm"
+        >
+          <a
+            data-certificate-link
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex items-center gap-2 font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            <Icon name="FileText" class="h-4 w-4" />
+            Aktuelles Batteriezertifikat ansehen
+          </a>
+          <button
+            type="button"
+            data-certificate-toggle
+            class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors text-destructive hover:bg-destructive/10"
+          >
+            PDF entfernen
+          </button>
+        </div>
+        <p hidden data-certificate-none class="mt-2 text-sm text-muted-foreground">
+          Noch kein Batteriezertifikat hochgeladen.
+        </p>
+        <p hidden data-certificate-warning class="mt-2 text-xs text-destructive">
+          Das Zertifikat wird beim Speichern entfernt.
+        </p>
+        <p data-certificate-hint class="mt-3 text-xs text-muted-foreground">
+          Optional: Batteriezertifikat als PDF hochladen (max. 1 Datei).
+        </p>
+        <PdfUploadField selectedLabel="Neues PDF: " />
+      </div>
+
+      <label class="block space-y-2 text-sm font-medium">
+        <span>Beschreibung</span>
+        <textarea
+          name="description"
+          rows="6"
+          placeholder="Beschreibe Zustand, Servicehistorie, Ausstattung, Batterie und was Käufer sonst wissen sollten."
+          class="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm font-normal leading-6 text-foreground shadow-sm outline-none placeholder:text-muted-foreground/75 focus:border-foreground/40 focus:ring-4 focus:ring-electric/20"
+        ></textarea>
+        <span class="block text-xs font-normal leading-5 text-muted-foreground">
+          Kurze Absätze mit den wichtigsten Details machen dein Inserat vertrauenswürdiger.
+        </span>
+      </label>
+
+      <p hidden data-error class="text-sm text-destructive"></p>
+      <button
+        type="submit"
+        data-save
+        class="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground disabled:opacity-50"
+      >
+        Speichern
+      </button>
+    </form>
+  </div>
+</main>
+
+<script>
+  import {
+    MAX_LISTING_IMAGES,
+    fetchEditableListing,
+    fetchListingImages,
+    removeBatteryCertificate,
+    removeListingImages,
+    updateListing,
+    uploadBatteryCertificate,
+    uploadListingImages,
+    validateListingImageFiles,
+    type Listing,
+  } from '@/data/listings';
+  import { onUserChange } from '@/lib/auth';
+  import { germanErrorMessage } from '@/lib/german-error';
+  import {
+    createExistingImageGallery,
+    createImagePicker,
+    createPdfPicker,
+  } from '@/lib/upload-fields';
+  import { POPULAR_EV_BRANDS } from '@/data/vehicle-brands';
+
+  const root = document.querySelector<HTMLElement>('[data-edit]');
+  if (root) {
+    const id = root.dataset.listingId!;
+    const views = {
+      loading: root.querySelector<HTMLElement>('[data-state="loading"]')!,
+      anonymous: root.querySelector<HTMLElement>('[data-state="anonymous"]')!,
+      missing: root.querySelector<HTMLElement>('[data-state="missing"]')!,
+      ready: root.querySelector<HTMLElement>('[data-state="ready"]')!,
+    };
+    const form = root.querySelector<HTMLFormElement>('[data-edit-form]')!;
+    const save = root.querySelector<HTMLButtonElement>('[data-save]')!;
+    const errorBox = root.querySelector<HTMLElement>('[data-error]')!;
+
+    const certificateCurrent = root.querySelector<HTMLElement>('[data-certificate-current]')!;
+    const certificateLink = root.querySelector<HTMLAnchorElement>('[data-certificate-link]')!;
+    const certificateToggle = root.querySelector<HTMLButtonElement>('[data-certificate-toggle]')!;
+    const certificateNone = root.querySelector<HTMLElement>('[data-certificate-none]')!;
+    const certificateWarning = root.querySelector<HTMLElement>('[data-certificate-warning]')!;
+    const certificateHint = root.querySelector<HTMLElement>('[data-certificate-hint]')!;
+
+    const gallery = createExistingImageGallery(
+      root.querySelector<HTMLElement>('[data-existing-images]')!,
+      () => syncImageSlots(),
+    );
+    const images = createImagePicker(root.querySelector<HTMLElement>('[data-image-field]')!);
+    const certificate = createPdfPicker(root.querySelector<HTMLElement>('[data-pdf-field]')!);
+
+    let userId: string | null = null;
+    let listing: Listing | null = null;
+    let removeCertificate = false;
+
+    function showView(name: keyof typeof views) {
+      for (const [key, node] of Object.entries(views)) node.hidden = key !== name;
+    }
+
+    // Keep the pending uploads within the total limit as existing images are removed
+    // or restored (each restored image frees one fewer new slot).
+    function syncImageSlots() {
+      images.setMaxFiles(MAX_LISTING_IMAGES - gallery.getKeptCount());
+    }
+
+    function setError(message: string | null) {
+      errorBox.textContent = message ?? '';
+      errorBox.hidden = message === null;
+    }
+
+    function field<T extends HTMLElement>(name: string) {
+      return form.querySelector<T>(`[name="${name}"]`)!;
+    }
+
+    function setValue(name: string, value: string | number | null | undefined) {
+      field<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(name).value =
+        value === null || value === undefined ? '' : String(value);
+    }
+
+    function fill(current: Listing) {
+      const brand = field<HTMLSelectElement>('brand');
+      brand.value = (POPULAR_EV_BRANDS as readonly string[]).includes(current.brand)
+        ? current.brand
+        : '';
+      setValue('model', current.model);
+      setValue('year', current.year);
+      setValue('mileage', current.mileage);
+      setValue('battery', current.batteryKwh);
+      setValue('range', current.rangeKm);
+      setValue('charging', current.chargingKw);
+      setValue('fastCharging', current.fastCharging ? 'Ja' : 'Nein');
+      setValue('soh', current.batteryHealth);
+      setValue('certificateDate', current.batteryCertificateDate);
+      setValue('certificateProvider', current.batteryCertificateProvider);
+      setValue('warranty', current.warrantyMonths);
+      setValue('price', current.price);
+      setValue('location', current.location);
+      setValue('sellerType', current.sellerType === 'Dealer' ? 'Händler' : 'Privat');
+      setValue('name', current.sellerName);
+      setValue('email', current.sellerEmail ?? '');
+      setValue('phone', current.sellerPhone ?? '');
+      setValue('description', current.description ?? '');
+
+      const label = `${current.brand} ${current.model}`;
+      root!.querySelector<HTMLElement>('[data-heading]')!.textContent = label;
+      root!.querySelector<HTMLElement>('[data-summary]')!.textContent =
+        `${label} (${current.year})`;
+      root!.querySelector<HTMLElement>('[data-location]')!.textContent = current.location;
+
+      const hasCertificate = Boolean(current.batteryCertificatePdfUrl);
+      certificateCurrent.hidden = !hasCertificate;
+      certificateNone.hidden = hasCertificate;
+      certificateHint.textContent = hasCertificate
+        ? 'Neues PDF hochladen, um das bestehende zu ersetzen (max. 1 Datei).'
+        : 'Optional: Batteriezertifikat als PDF hochladen (max. 1 Datei).';
+      if (hasCertificate) certificateLink.href = current.batteryCertificatePdfUrl!;
+    }
+
+    certificateToggle.addEventListener('click', () => {
+      removeCertificate = !removeCertificate;
+      certificateToggle.textContent = removeCertificate
+        ? 'Entfernen rückgängig machen'
+        : 'PDF entfernen';
+      certificateToggle.classList.toggle('text-foreground', removeCertificate);
+      certificateToggle.classList.toggle('hover:bg-secondary', removeCertificate);
+      certificateToggle.classList.toggle('text-destructive', !removeCertificate);
+      certificateToggle.classList.toggle('hover:bg-destructive/10', !removeCertificate);
+      certificateWarning.hidden = !removeCertificate;
+    });
+
+    onUserChange(async (user) => {
+      userId = user?.id ?? null;
+      if (!userId) {
+        showView('anonymous');
+        return;
+      }
+
+      showView('loading');
+      try {
+        const [editable, existing] = await Promise.all([
+          fetchEditableListing(id, userId),
+          fetchListingImages(id),
+        ]);
+        listing = editable;
+        if (!editable) {
+          showView('missing');
+          return;
+        }
+        gallery.setImages(existing);
+        syncImageSlots();
+        fill(editable);
+        showView('ready');
+      } catch (error) {
+        setError(germanErrorMessage(error, 'Inserat konnte nicht geladen werden'));
+        showView('ready');
+      }
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!userId) return;
+      setError(null);
+
+      const newPhotos = images.getFiles();
+      const removedImageIds = gallery.getRemovedIds();
+      if (gallery.getKeptCount() + newPhotos.length === 0) {
+        setError('Bitte behalte oder lade mindestens 1 Foto hoch.');
+        return;
+      }
+
+      // Validate the pending image uploads before touching the listing.
+      try {
+        validateListingImageFiles(newPhotos);
+      } catch (error) {
+        setError(germanErrorMessage(error, 'Bitte prüfe die ausgewählten Bilder.'));
+        return;
+      }
+
+      save.disabled = true;
+      save.textContent = 'Speichert…';
+
+      const fd = new FormData(form);
+      const num = (key: string) => Number(fd.get(key) || 0);
+      const str = (key: string) => String(fd.get(key) || '').trim();
+
+      const newCertificate = certificate.getFile();
+      const certificateMetadata = {
+        battery_certificate_date: str('certificateDate') || null,
+        battery_certificate_provider: str('certificateProvider') || null,
+      };
+
+      try {
+        await updateListing(
+          id,
+          {
+            brand: str('brand'),
+            model: str('model'),
+            year: num('year'),
+            mileage: num('mileage'),
+            battery_kwh: num('battery'),
+            range_km: num('range'),
+            charging_kw: num('charging'),
+            fast_charging: str('fastCharging') === 'Ja',
+            battery_health: fd.get('soh') ? num('soh') : null,
+            ...(newCertificate ? {} : certificateMetadata),
+            warranty_months: fd.get('warranty') ? num('warranty') : null,
+            seller_type: str('sellerType') === 'Händler' ? 'Dealer' : 'Private',
+            price: num('price'),
+            location: str('location'),
+            seller_name: str('name'),
+            seller_email: str('email'),
+            seller_phone: str('phone') || null,
+            description: str('description') || null,
+          },
+          userId,
+        );
+
+        if (removedImageIds.length > 0) await removeListingImages(id, removedImageIds);
+        if (newPhotos.length > 0) await uploadListingImages(id, userId, newPhotos);
+
+        if (removeCertificate && !newCertificate) {
+          await removeBatteryCertificate(id, userId, listing?.batteryCertificatePdfPath ?? null);
+        }
+        if (newCertificate) {
+          await uploadBatteryCertificate(
+            id,
+            userId,
+            newCertificate,
+            certificateMetadata,
+            listing?.batteryCertificatePdfPath ?? null,
+          );
+        }
+
+        window.location.assign('/account');
+      } catch (error) {
+        setError(germanErrorMessage(error, 'Speichern fehlgeschlagen'));
+        save.disabled = false;
+        save.textContent = 'Speichern';
+      }
+    });
+  }
+</script>

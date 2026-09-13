@@ -1,0 +1,54 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Icon from '@/components/icons/Icon.astro';
+import ListingAside from './ListingAside.astro';
+import ListingBody from './ListingBody.astro';
+import ListingGallery from './ListingGallery.astro';
+import { vehicleJsonLd } from './vehicle-json-ld';
+import type { Listing, ListingImage } from '@/data/listings';
+import { formatCHF, formatKm } from '@/lib/format';
+
+interface Props {
+  listing: Listing;
+  listingImages: ListingImage[];
+  path: string;
+}
+
+const { listing, listingImages, path } = Astro.props;
+
+const title = `${listing.brand} ${listing.model} kaufen in ${listing.location} | Audo.ch`;
+const description = `${listing.brand} ${listing.model}, ${listing.year}, ${formatKm(
+  listing.mileage,
+)}, ${listing.rangeKm} km Reichweite, ${formatCHF(listing.price)}. Elektroauto in ${
+  listing.location
+} auf Audo.ch kaufen.`;
+
+const galleryImages =
+  listingImages.length > 0 ? listingImages.map((image) => image.url) : [listing.image];
+---
+
+<Layout
+  title={title}
+  description={description}
+  path={path}
+  image={listing.image.startsWith('http') ? listing.image : undefined}
+  jsonLd={[vehicleJsonLd(listing, listingImages, path)]}
+>
+  <main class="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
+    <a
+      href="/browse"
+      class="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+    >
+      <Icon name="ArrowLeft" class="h-4 w-4" /> Zurück zur Übersicht
+    </a>
+
+    <div class="mt-6 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+      <div>
+        <ListingGallery images={galleryImages} alt={`${listing.brand} ${listing.model}`} />
+        <ListingBody listing={listing} />
+      </div>
+
+      <ListingAside listing={listing} />
+    </div>
+  </main>
+</Layout>

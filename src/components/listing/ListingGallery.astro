@@ -1,0 +1,76 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+
+interface Props {
+  images: string[];
+  alt: string;
+}
+
+const { images, alt } = Astro.props;
+const hasMultipleImages = images.length > 1;
+---
+
+<div
+  class="overflow-hidden rounded-3xl border border-border bg-card shadow-card"
+  data-gallery
+  data-images={JSON.stringify(images)}
+>
+  <div class="relative">
+    <img
+      data-gallery-image
+      src={images[0]}
+      alt={alt}
+      width="1200"
+      height="800"
+      class="aspect-[4/3] w-full object-cover"
+    />
+    {
+      hasMultipleImages && (
+        <>
+          <button
+            type="button"
+            aria-label="Vorheriges Bild"
+            data-gallery-prev
+            class="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-background/85 text-foreground shadow-card backdrop-blur hover:bg-background"
+          >
+            <Icon name="ChevronLeft" class="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            aria-label="Nächstes Bild"
+            data-gallery-next
+            class="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-background/85 text-foreground shadow-card backdrop-blur hover:bg-background"
+          >
+            <Icon name="ChevronRight" class="h-5 w-5" />
+          </button>
+          <div class="absolute bottom-3 right-3 rounded-full bg-background/85 px-3 py-1 text-xs font-medium text-foreground shadow-card backdrop-blur">
+            <span data-gallery-position>1</span> / {images.length}
+          </div>
+        </>
+      )
+    }
+  </div>
+</div>
+
+<script>
+  const gallery = document.querySelector<HTMLElement>('[data-gallery]');
+  if (gallery) {
+    const images: string[] = JSON.parse(gallery.dataset.images ?? '[]');
+    const image = gallery.querySelector<HTMLImageElement>('[data-gallery-image]')!;
+    const position = gallery.querySelector<HTMLElement>('[data-gallery-position]');
+    let index = 0;
+
+    function show(next: number) {
+      index = (next + images.length) % images.length;
+      image.src = images[index];
+      if (position) position.textContent = String(index + 1);
+    }
+
+    gallery
+      .querySelector<HTMLButtonElement>('[data-gallery-prev]')
+      ?.addEventListener('click', () => show(index - 1));
+    gallery
+      .querySelector<HTMLButtonElement>('[data-gallery-next]')
+      ?.addEventListener('click', () => show(index + 1));
+  }
+</script>
