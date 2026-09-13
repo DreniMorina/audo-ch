@@ -4,8 +4,12 @@ import { z } from "zod";
 export const browseSearchSchema = z.object({
   q: z.string().optional().catch(""),
   brand: z.string().optional().catch("Alle"),
-  maxPrice: z.number().optional().catch(150000),
-  minRange: z.number().optional().catch(0),
+  maxPrice: z.number().min(10000).max(150000).optional().catch(150000),
+  minRange: z.number().min(0).max(600).optional().catch(0),
+  seller: z.enum(["Alle", "Private", "Dealer"]).optional().catch("Alle"),
+  fastOnly: z.boolean().optional().catch(false),
+  certificateOnly: z.boolean().optional().catch(false),
+  page: z.number().int().positive().optional().catch(1),
 });
 
 export type BrowseSearch = z.infer<typeof browseSearchSchema>;
@@ -17,6 +21,10 @@ function optionalNumber(params: URLSearchParams, key: string) {
   return Number.isFinite(value) ? value : undefined;
 }
 
+function checkbox(params: URLSearchParams, key: string) {
+  return ["1", "true", "on"].includes(params.get(key) ?? "");
+}
+
 /** Reads the browse filters off a URL. Malformed values fall back instead of throwing. */
 export function parseBrowseSearch(params: URLSearchParams): BrowseSearch {
   return browseSearchSchema.parse({
@@ -24,6 +32,10 @@ export function parseBrowseSearch(params: URLSearchParams): BrowseSearch {
     brand: params.get("brand") ?? undefined,
     maxPrice: optionalNumber(params, "maxPrice"),
     minRange: optionalNumber(params, "minRange"),
+    seller: params.get("seller") ?? undefined,
+    fastOnly: checkbox(params, "fastOnly"),
+    certificateOnly: checkbox(params, "certificateOnly"),
+    page: optionalNumber(params, "page"),
   });
 }
 

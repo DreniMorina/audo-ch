@@ -172,7 +172,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      marketplace_stats: {
+        Args: Record<PropertyKey, never>;
+        Returns: { location_count: number; vehicle_count: number }[];
+      };
     };
     Enums: {
       app_role: "user" | "admin";

@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { resolveImage } from "./images";
+import type { BrowseSearch } from "@/lib/browse-search";
 
 export type AppRole = "user" | "admin";
 export type ListingStatus = "approved" | "pending" | "rejected";
@@ -143,6 +144,73 @@ export async function fetchApprovedListings(): Promise<Listing[]> {
     .order("created_at", { ascending: false });
   if (error) throw error;
   return (data as Row[]).map(toListing);
+}
+
+export const BROWSE_PAGE_SIZE = 12;
+
+export type BrowseListingsResult = {
+  listings: Listing[];
+  total: number;
+  page: number;
+  pageCount: number;
+};
+
+/** Fetches only the newest cards needed by the statically generated home page. */
+export async function fetchFeaturedListings(): Promise<Listing[]> {
+  const { data, error } = await supabase
+    .from("listings")
+    .select(SELECT_COLS)
+    .eq("status", "approved")
+    .order("created_at", { ascending: false })
+    .limit(6);
+  if (error) throw error;
+  return (data as Row[]).map(toListing);
+}
+
+export type MarketplaceStats = { vehicleCount: number; locationCount: number };
+
+/** Reads the two live counters without transferring listing rows. */
+export async function fetchMarketplaceStats(): Promise<MarketplaceStats> {
+  const { data, error } = await supabase.rpc("marketplace_stats");
+  if (error) throw error;
+  const stats = data?.[0];
+  return {
+    vehicleCount: Number(stats?.vehicle_count ?? 0),
+    locationCount: Number(stats?.location_count ?? 0),
+  };
+}
+
+/** Applies all browse filters in PostgREST and transfers one fixed-size result page. */
+export async function searchApprovedListings(search: BrowseSearch): Promise<BrowseListingsResult> {
+  const page = search.page ?? 1;
+  let query = supabase
+    .from("listings")
+    .select(SELECT_COLS, { count: "exact" })
+    .eq("status", "approved");
+
+  // Commas and parentheses have structural meaning in PostgREST's `or` syntax.
+  const term = search.q?.replace(/[,%()]/g, " ").trim();
+  if (term) query = query.or(`brand.ilike.%${term}%,model.ilike.%${term}%,location.ilike.%${term}%`);
+  if (search.brand && search.brand !== "Alle") query = query.eq("brand", search.brand);
+  if (search.maxPrice !== undefined) query = query.lte("price", search.maxPrice);
+  if (search.minRange !== undefined) query = query.gte("range_km", search.minRange);
+  if (search.seller && search.seller !== "Alle") query = query.eq("seller_type", search.seller);
+  if (search.fastOnly) query = query.eq("fast_charging", true);
+  if (search.certificateOnly) query = query.not("battery_certificate_pdf_url", "is", null);
+
+  const from = (page - 1) * BROWSE_PAGE_SIZE;
+  const { data, count, error } = await query
+    .order("created_at", { ascending: false })
+    .range(from, from + BROWSE_PAGE_SIZE - 1);
+  if (error) throw error;
+
+  const total = count ?? 0;
+  return {
+    listings: (data as Row[]).map(toListing),
+    total,
+    page,
+    pageCount: Math.ceil(total / BROWSE_PAGE_SIZE),
+  };
 }
 
 export type ListingSitemapEntry = {
