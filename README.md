@@ -1,6 +1,6 @@
 # audo.ch
 
-Der Schweizer Marktplatz für Elektroautos — Astro-Frontend mit React-Islands, Supabase als Backend.
+Der Schweizer Marktplatz für Elektroautos. Reines Astro — kein UI-Framework, keine Hydration.
 
 ## Setup
 
@@ -19,23 +19,30 @@ npm run dev
 
 ## Architektur
 
-Astro übernimmt Routing, `<head>` und Server-Rendering; die UI-Komponenten sind React und
-werden standardmässig zu statischem HTML gerendert. Nur Komponenten, die eine Seite mit einer
-`client:*`-Direktive einbindet, laden JavaScript im Browser.
+Jede Seite und jede Komponente ist `.astro`. Interaktive Teile bekommen ein `<script>`,
+das sein Markup über `data-*`-Attribute findet und Zustände umschaltet — es gibt kein
+Client-Rendering und keine Hydration.
+
+Marktplatzdaten werden serverseitig im Frontmatter geladen, die Inserate stehen also im
+HTML. Supabase-Aufrufe im Browser gibt es nur dort, wo eine Session nötig ist: Login,
+Inserat anlegen/bearbeiten/löschen und Datei-Uploads.
 
 ```
 src/
-├── pages/            Astro-Routen: URL, SEO-Head, Island-Grenzen
-│   ├── listings/[id].astro          SSR – lädt das Inserat serverseitig (SEO, echte 404)
-│   ├── browse.astro                 SSR – Filter kommen aus der Query-String
+├── pages/            Astro-Routen: URL, SEO-Head
+│   ├── index.astro                  SSR – Inserate serverseitig gerendert
+│   ├── browse.astro                 SSR – Inserate + Filter aus der Query-String
+│   ├── listings/[id].astro          SSR – Inserat serverseitig, echte 404
 │   ├── account/                     Konto & Inserat bearbeiten
 │   └── sitemap.xml.ts               SSR – statische Seiten + alle freigegebenen Inserate
 ├── layouts/Layout.astro             HTML-Shell, Meta-Tags, Canonical, JSON-LD, Header/Footer
-├── components/       React-Komponenten (site, home, browse, listing, sell, account, legal)
+├── components/
+│   ├── icons/                       Inline-SVG-Icons (Icon.astro + icons.ts)
+│   ├── forms/                       Felder und Upload-Widgets
+│   ├── site/                        Header, Footer, Karte, Consent, Analytics
+│   ├── home/ browse/ listing/ sell/ account/ legal/
 ├── data/             Supabase-Zugriff auf Inserate, Bilder und Zertifikate
-├── hooks/            Supabase-Session, Login-Link-Cooldown, Cookie-Consent
-├── integrations/     Supabase-Client
-├── lib/              SEO, Formatierung, Fehlermeldungen, Google Analytics
+├── lib/              SEO, Auth, Consent, Formatierung, Fehlermeldungen, Upload-Verhalten
 ├── middleware.ts     www→Apex-Redirect und Rate-Limit (nur für SSR-Routen)
 └── styles/global.css Design-System (Tailwind v4 Theme)
 ```
@@ -44,12 +51,20 @@ src/
 
 Alle Seiten werden vorgerendert, ausser:
 
-| Route                            | Grund                                              |
-| :------------------------------- | :------------------------------------------------- |
-| `/listings/[id]`                 | Inserat serverseitig laden, 404 für gelöschte Inserate |
-| `/browse`                        | Startfilter kommen aus `?q=`, `?brand=`, …          |
-| `/account/listings/[id]/edit`    | Dynamische ID ohne bekannte Pfadliste               |
-| `/sitemap.xml`                   | Enthält alle aktuell freigegebenen Inserate         |
+| Route                            | Grund                                                  |
+| :------------------------------- | :----------------------------------------------------- |
+| `/`                              | Inserate und Zähler kommen aus der Datenbank            |
+| `/browse`                        | Inserate + Startfilter aus `?q=`, `?brand=`, …          |
+| `/listings/[id]`                 | Inserat serverseitig laden, 404 für gelöschte Inserate  |
+| `/account/listings/[id]/edit`    | Dynamische ID ohne bekannte Pfadliste                   |
+| `/sitemap.xml`                   | Enthält alle aktuell freigegebenen Inserate             |
+
+### Client-JavaScript
+
+| Seiten                              | JS     |
+| :---------------------------------- | :----- |
+| Statische Seiten (AGB, SEO, 404, …) | 2,5 kB |
+| Konto, Inserat erstellen/bearbeiten | 225 kB (davon 224 kB Supabase-Client für Auth und Uploads) |
 
 ## Umgebungsvariablen
 

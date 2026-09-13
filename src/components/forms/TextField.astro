@@ -1,0 +1,21 @@
+---
+interface Props {
+  name: string;
+  type?: astroHTML.JSX.InputHTMLAttributes['type'];
+  placeholder?: string;
+  required?: boolean;
+}
+
+const { name, type = 'text', placeholder, required = false } = Astro.props;
+const label = required && placeholder ? `${placeholder} *` : placeholder;
+const ariaLabel = required && placeholder ? `${placeholder} Pflichtfeld` : placeholder;
+---
+
+<input
+  name={name}
+  type={type}
+  required={required}
+  placeholder={label}
+  aria-label={ariaLabel}
+  class="h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-foreground/40 focus:ring-4 focus:ring-electric/20"
+/>

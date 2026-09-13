@@ -1,0 +1,64 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+
+const bullets = [
+  'State of Health (%) auf einen Blick',
+  'Gezielt nach Batteriebericht filtern',
+  'AC-Bordlader und DC-Spitzenleistung',
+  'Optional unabhängige Batterieprüfung',
+];
+
+const stats = [
+  { label: 'Nutzbare Kapazität', value: '70.5 kWh' },
+  { label: 'Originale Kapazität', value: '75 kWh' },
+  { label: 'DC-Spitze', value: '250 kW' },
+  { label: 'Restgarantie', value: '28 Monate' },
+];
+---
+
+<section class="mx-auto max-w-7xl px-6 py-24">
+  <div class="grid items-center gap-12 md:grid-cols-2">
+    <div>
+      <h2 class="font-display text-3xl font-semibold md:text-4xl text-balance">
+        Die Batterie ist das Herzstück. Wir behandeln sie auch so.
+      </h2>
+      <p class="mt-5 text-muted-foreground">
+        Vergleiche Batterieinformationen dort, wo sie verfügbar sind: State of Health,
+        Batteriegarantie und Ladeverhalten stehen klar im Inserat. Fahrzeuge mit Batteriebericht
+        kannst du gezielt filtern und schneller einschätzen.
+      </p>
+      <ul class="mt-6 space-y-3 text-sm">
+        {
+          bullets.map((t) => (
+            <li class="flex items-center gap-3">
+              <span class="flex h-5 w-5 items-center justify-center rounded-full bg-electric/30 text-graphite">
+                <Icon name="BadgeCheck" class="h-3 w-3" strokeWidth={3} />
+              </span>
+              {t}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="rounded-3xl border border-border bg-card p-8 shadow-elevated">
+      <div class="flex items-baseline gap-2">
+        <span class="font-display text-5xl font-semibold">94</span>
+        <span class="text-lg text-muted-foreground">% SoH</span>
+      </div>
+      <div class="mt-6 h-2 w-full overflow-hidden rounded-full bg-secondary">
+        <div class="h-full rounded-full bg-electric" style="width: 94%"></div>
+      </div>
+      <dl class="mt-8 grid grid-cols-2 gap-6 text-sm">
+        {
+          stats.map((stat) => (
+            <div>
+              <dt class="text-xs uppercase tracking-widest text-muted-foreground">{stat.label}</dt>
+              <dd class="mt-1 font-display text-lg font-semibold">{stat.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,34 @@
+{/* Google Analytics loads only after the visitor allows analytics. */}
+<script>
+  import { onConsentChange, readConsent } from '@/lib/cookie-consent';
+  import {
+    disableGoogleAnalytics,
+    enableGoogleAnalytics,
+    initializeGoogleAnalytics,
+    trackPageView,
+  } from '@/lib/google-analytics';
+
+  let initialized = false;
+
+  function applyConsent(analyticsAllowed: boolean) {
+    if (!analyticsAllowed) {
+      disableGoogleAnalytics();
+      initialized = false;
+      return;
+    }
+
+    if (initialized) {
+      enableGoogleAnalytics();
+    } else {
+      initializeGoogleAnalytics();
+      initialized = true;
+    }
+
+    // Astro serves a multi-page app, so each navigation is a document load and the
+    // page view is sent once per page rather than on router location changes.
+    trackPageView(window.location.href);
+  }
+
+  applyConsent(readConsent()?.analytics === true);
+  onConsentChange((consent) => applyConsent(consent.analytics));
+</script>

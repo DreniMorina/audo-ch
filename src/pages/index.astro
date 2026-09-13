@@ -1,13 +1,27 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import { Hero } from '@/components/home/Hero';
-import { TrustStrip } from '@/components/home/TrustStrip';
-import { Featured } from '@/components/home/Featured';
-import { WhyEvOnly } from '@/components/home/WhyEvOnly';
-import { BatteryTrust } from '@/components/home/BatteryTrust';
-import { FaqSection } from '@/components/home/FaqSection';
-import { SellCTA } from '@/components/home/SellCTA';
+import Hero from '@/components/home/Hero.astro';
+import TrustStrip from '@/components/home/TrustStrip.astro';
+import Featured from '@/components/home/Featured.astro';
+import WhyEvOnly from '@/components/home/WhyEvOnly.astro';
+import BatteryTrust from '@/components/home/BatteryTrust.astro';
+import FaqSection from '@/components/home/FaqSection.astro';
+import SellCTA from '@/components/home/SellCTA.astro';
 import { faqJsonLd } from '@/components/home/faq';
+import { fetchApprovedListings, type Listing } from '@/data/listings';
+
+// Rendered per request so the listing grid and the counters are in the HTML itself
+// rather than fetched by the browser after load.
+export const prerender = false;
+
+// A failing query must not take the page down: the grid degrades to empty, exactly as
+// it did while the data was loaded in the browser.
+let listings: Listing[] = [];
+try {
+  listings = await fetchApprovedListings();
+} catch (error) {
+  console.error('[index] Failed to load listings', error);
+}
 ---
 
 <Layout
@@ -17,9 +31,9 @@ import { faqJsonLd } from '@/components/home/faq';
   jsonLd={[faqJsonLd()]}
 >
   <main>
-    <Hero client:load />
+    <Hero listings={listings} />
     <TrustStrip />
-    <Featured client:load />
+    <Featured listings={listings} />
     <WhyEvOnly />
     <BatteryTrust />
     <FaqSection />

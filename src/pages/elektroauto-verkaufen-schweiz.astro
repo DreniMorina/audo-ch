@@ -1,6 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import { SellPage } from '@/components/sell/SellPage';
+import SellPage from '@/components/sell/SellPage.astro';
 ---
 
 <Layout
@@ -8,5 +8,5 @@ import { SellPage } from '@/components/sell/SellPage';
   description="Inseriere dein Elektroauto kostenlos auf audo.ch und erreiche Schweizer Käufer, die gezielt nach Batterie-, Reichweiten- und Ladedaten suchen."
   path="/elektroauto-verkaufen-schweiz"
 >
-  <SellPage client:load />
+  <SellPage />
 </Layout>

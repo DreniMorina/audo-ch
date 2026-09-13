@@ -1,6 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import { AccountPage } from '@/components/account/AccountPage';
+import AccountPage from '@/components/account/AccountPage.astro';
 ---
 
 <Layout
@@ -8,5 +8,5 @@ import { AccountPage } from '@/components/account/AccountPage';
   description="Verwalte und bearbeite deine Elektroauto-Inserate auf audo.ch."
   path="/account"
 >
-  <AccountPage client:load />
+  <AccountPage />
 </Layout>

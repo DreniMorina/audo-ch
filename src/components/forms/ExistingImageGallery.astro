@@ -1,0 +1,26 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+---
+
+<div data-existing-images>
+  <p data-existing-empty class="mt-2 text-sm text-muted-foreground">
+    Noch keine Bilder hochgeladen.
+  </p>
+  <div hidden data-existing-grid class="mt-3 grid gap-3 sm:grid-cols-2"></div>
+
+  <template data-existing-template>
+    <figure data-figure class="relative rounded-xl border bg-background p-2 border-border">
+      <img data-existing-image class="h-28 w-full rounded-lg object-cover" />
+      <figcaption data-existing-caption class="mt-2 truncate text-xs text-muted-foreground">
+      </figcaption>
+      <button
+        type="button"
+        data-toggle-remove
+        class="mt-2 inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors text-destructive hover:bg-destructive/10"
+      >
+        <span data-remove-icon><Icon name="X" class="h-3.5 w-3.5" /></span>
+        <span data-remove-label>Entfernen</span>
+      </button>
+    </figure>
+  </template>
+</div>

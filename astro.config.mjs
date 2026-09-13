@@ -1,6 +1,5 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -11,8 +10,6 @@ export default defineConfig({
   // via `export const prerender = false`: the listing detail page, /browse (its
   // filters come from the query string) and /sitemap.xml.
   adapter: vercel(),
-
-  integrations: [react()],
 
   // `/sell` only ever redirected to the sell landing page.
   redirects: {

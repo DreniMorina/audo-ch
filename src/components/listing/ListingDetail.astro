@@ -1,9 +1,9 @@
 ---
-import { ArrowLeft } from 'lucide-react';
 import Layout from '@/layouts/Layout.astro';
-import { ListingAside } from './ListingAside';
-import { ListingBody } from './ListingBody';
-import { ListingGallery } from './ListingGallery';
+import Icon from '@/components/icons/Icon.astro';
+import ListingAside from './ListingAside.astro';
+import ListingBody from './ListingBody.astro';
+import ListingGallery from './ListingGallery.astro';
 import { vehicleJsonLd } from './vehicle-json-ld';
 import type { Listing, ListingImage } from '@/data/listings';
 import { formatCHF, formatKm } from '@/lib/format';
@@ -39,20 +39,16 @@ const galleryImages =
       href="/browse"
       class="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
     >
-      <ArrowLeft className="h-4 w-4" /> Zurück zur Übersicht
+      <Icon name="ArrowLeft" class="h-4 w-4" /> Zurück zur Übersicht
     </a>
 
     <div class="mt-6 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
       <div>
-        <ListingGallery
-          client:load
-          images={galleryImages}
-          alt={`${listing.brand} ${listing.model}`}
-        />
+        <ListingGallery images={galleryImages} alt={`${listing.brand} ${listing.model}`} />
         <ListingBody listing={listing} />
       </div>
 
-      <ListingAside client:load listing={listing} />
+      <ListingAside listing={listing} />
     </div>
   </main>
 </Layout>

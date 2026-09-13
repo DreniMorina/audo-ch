@@ -1,9 +1,9 @@
 ---
 import '@/styles/global.css';
-import { Header } from '@/components/site/Header';
-import { Footer } from '@/components/site/Footer';
-import { CookieBanner } from '@/components/site/CookieBanner';
-import { GoogleAnalytics } from '@/components/site/GoogleAnalytics';
+import Header from '@/components/site/Header.astro';
+import Footer from '@/components/site/Footer.astro';
+import CookieBanner from '@/components/site/CookieBanner.astro';
+import Analytics from '@/components/site/Analytics.astro';
 import { canonicalUrl, jsonLdScript, seoMeta, websiteJsonLd } from '@/lib/seo';
 
 interface Props {
@@ -73,7 +73,7 @@ const structuredData = [websiteJsonLd(), ...jsonLd].map(jsonLdScript);
     {
       chrome ? (
         <div class="flex min-h-screen flex-col">
-          <Header pathname={Astro.url.pathname} />
+          <Header />
           <slot />
           <Footer />
         </div>
@@ -81,7 +81,7 @@ const structuredData = [websiteJsonLd(), ...jsonLd].map(jsonLdScript);
         <slot />
       )
     }
-    <GoogleAnalytics client:idle />
-    <CookieBanner client:idle />
+    <CookieBanner />
+    <Analytics />
   </body>
 </html>

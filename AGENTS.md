@@ -8,19 +8,26 @@ Build a Swiss EV marketplace. Buyers browse and contact sellers without creating
 
 ## Stack
 
-- Astro with React islands / TypeScript frontend, deployed on Vercel.
+- Astro / TypeScript frontend, deployed on Vercel. No UI framework: pages and components
+  are `.astro`, interactivity is plain TypeScript in `<script>` blocks.
 - Supabase Auth for seller login via magic link / OTP email.
 - Supabase Postgres for marketplace data.
 - Supabase Storage for listing images and optional battery-certificate PDFs.
 
 ## Architecture
 
-- `src/pages/**` are Astro routes: they own routing, the `<head>`, and where an island starts.
-- `src/components/**` are React components carried over from the previous app. Astro renders
-  them to plain HTML; only components a page mounts with a `client:*` directive ship JavaScript.
+- `src/pages/**` are Astro routes: they own routing and the `<head>`.
+- `src/components/**` are `.astro` components. Anything interactive ships a `<script>` that
+  finds its markup through `data-*` hooks and toggles state — there is no client-side
+  rendering and no hydration.
+- Marketplace data is read on the server in page frontmatter, so listings are in the HTML.
+  Browser-side Supabase calls are limited to what needs a session: login, listing
+  create/edit/delete and file uploads.
 - Pages are prerendered by default. `export const prerender = false` marks the routes that
-  genuinely depend on the request: `/listings/[id]`, `/browse`, `/account/listings/[id]/edit`
-  and `/sitemap.xml`.
+  genuinely depend on the request: `/`, `/browse`, `/listings/[id]`,
+  `/account/listings/[id]/edit` and `/sitemap.xml`.
+- Icons are inlined from `src/components/icons/icons.ts` through `Icon.astro`; no icon
+  package is installed.
 - `src/middleware.ts` holds the www-to-apex redirect and the per-IP rate limit. It runs for
   on-demand routes only — prerendered pages are served from the CDN and never reach it.
 
@@ -75,6 +82,8 @@ Current behavior: new and updated seller listings are saved as `approved`. Publi
 - Do not add buyer auth unless the product direction changes.
 - Prefer small, direct changes and keep German UI copy consistently informal: address users with "du/dein" instead of formal "Sie/Ihr" in German product UI copy.
 - Never put try/catch blocks around imports.
+- Keep the project framework-free: no React, Vue or Svelte components, and no UI or icon
+  libraries. New interactivity belongs in an `.astro` component's `<script>`.
 
 ## Documentation
 
@@ -84,7 +93,7 @@ Consult these guides before working on related tasks:
 
 - [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
 - [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
+- [Client-side scripts](https://docs.astro.build/en/guides/client-side-scripts/)
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)

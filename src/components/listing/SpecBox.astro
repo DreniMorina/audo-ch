@@ -1,0 +1,20 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+import type { IconName } from '@/components/icons/icons';
+
+interface Props {
+  icon: IconName;
+  label: string;
+  value: string;
+}
+
+const { icon, label, value } = Astro.props;
+---
+
+<div class="rounded-xl border border-border bg-card p-4">
+  <div class="flex items-center gap-1.5 text-xs uppercase tracking-widest text-muted-foreground">
+    <Icon name={icon} class="h-4 w-4" />
+    {label}
+  </div>
+  <p class="mt-1.5 font-display text-base font-semibold">{value}</p>
+</div>
