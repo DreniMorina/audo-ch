@@ -8,17 +8,13 @@ import BatteryTrust from '@/components/home/BatteryTrust.astro';
 import FaqSection from '@/components/home/FaqSection.astro';
 import SellCTA from '@/components/home/SellCTA.astro';
 import { faqJsonLd } from '@/components/home/faq';
-import { fetchApprovedListings, type Listing } from '@/data/listings';
-
-// Rendered per request so the listing grid and the counters are in the HTML itself
-// rather than fetched by the browser after load.
-export const prerender = false;
+import { fetchFeaturedListings, type Listing } from '@/data/listings';
 
 // A failing query must not take the page down: the grid degrades to empty, exactly as
 // it did while the data was loaded in the browser.
 let listings: Listing[] = [];
 try {
-  listings = await fetchApprovedListings();
+  listings = await fetchFeaturedListings();
 } catch (error) {
   console.error('[index] Failed to load listings', error);
 }
@@ -31,7 +27,7 @@ try {
   jsonLd={[faqJsonLd()]}
 >
   <main>
-    <Hero listings={listings} />
+    <Hero />
     <TrustStrip />
     <Featured listings={listings} />
     <WhyEvOnly />

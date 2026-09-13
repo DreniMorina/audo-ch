@@ -24,8 +24,10 @@ Build a Swiss EV marketplace. Buyers browse and contact sellers without creating
   Browser-side Supabase calls are limited to what needs a session: login, listing
   create/edit/delete and file uploads.
 - Pages are prerendered by default. `export const prerender = false` marks the routes that
-  genuinely depend on the request: `/`, `/browse`, `/listings/[id]`,
+  genuinely depend on the request: `/browse`, `/listings/[id]`,
   `/account/listings/[id]/edit` and `/sitemap.xml`.
+- The static home page limits its build-time featured-listing query to six cards. Its live
+  marketplace counters are rendered as a deferred server island with a static fallback.
 - Icons are inlined from `src/components/icons/icons.ts` through `Icon.astro`; no icon
   package is installed.
 - `src/middleware.ts` holds the www-to-apex redirect and the per-IP rate limit. It runs for

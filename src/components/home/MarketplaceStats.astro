@@ -1,0 +1,21 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+import { fetchMarketplaceStats } from '@/data/listings';
+
+const stats = await fetchMarketplaceStats();
+---
+
+<div class="mt-6 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+  <span class="inline-flex items-center gap-1.5">
+    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-electric/20 text-graphite">
+      <Icon name="Zap" class="h-3 w-3" />
+    </span>
+    {stats.vehicleCount.toLocaleString('de-CH')} Elektroautos verfügbar
+  </span>
+  <span class="inline-flex items-center gap-1.5">
+    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-electric/20 text-graphite">
+      <Icon name="MapPin" class="h-3 w-3" />
+    </span>
+    {stats.locationCount.toLocaleString('de-CH')} Orte in der Schweiz
+  </span>
+</div>

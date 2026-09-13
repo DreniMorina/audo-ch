@@ -1,15 +1,8 @@
 ---
 import Icon from '@/components/icons/Icon.astro';
-import type { Listing } from '@/data/listings';
+import MarketplaceStats from '@/components/home/MarketplaceStats.astro';
 import { browseHref } from '@/lib/browse-search';
 import heroCar from '@/assets/hero-car.jpg';
-
-interface Props {
-  listings: Listing[];
-}
-
-const { listings } = Astro.props;
-const locations = new Set(listings.map((l) => l.location));
 
 const quickFilters = [
   { label: 'Tesla', href: browseHref({ brand: 'Tesla' }) },
@@ -74,24 +67,11 @@ const quickFilters = [
         }
       </div>
 
-      <div class="mt-6 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-        <span class="inline-flex items-center gap-1.5">
-          <span
-            class="flex h-5 w-5 items-center justify-center rounded-full bg-electric/20 text-graphite"
-          >
-            <Icon name="Zap" class="h-3 w-3" />
-          </span>
-          {listings.length} Elektroautos verfügbar
-        </span>
-        <span class="inline-flex items-center gap-1.5">
-          <span
-            class="flex h-5 w-5 items-center justify-center rounded-full bg-electric/20 text-graphite"
-          >
-            <Icon name="MapPin" class="h-3 w-3" />
-          </span>
-          {locations.size} Orte in der Schweiz
-        </span>
-      </div>
+      <MarketplaceStats server:defer>
+        <div slot="fallback" class="mt-6 text-xs text-muted-foreground">
+          Entdecke Elektroautos aus der ganzen Schweiz.
+        </div>
+      </MarketplaceStats>
     </div>
 
     <div class="relative">
