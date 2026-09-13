@@ -1,1 +1,20 @@
 @import "tailwindcss";
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/DMSans-VariableFont_opsz,wght.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 1000;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/DMSans-Italic-VariableFont_opsz,wght.ttf") format("truetype");
+  font-style: italic;
+  font-weight: 100 1000;
+  font-display: swap;
+}
+
+html {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+}
