@@ -5,9 +5,11 @@ import { formatEUR, formatKm } from '@/lib/format';
 
 interface Props {
   listing: Listing;
+  /** The first above-the-fold result is a likely LCP candidate. */
+  priority?: boolean;
 }
 
-const { listing } = Astro.props;
+const { listing, priority = false } = Astro.props;
 
 const specs = [
   { icon: 'Battery', label: `${listing.batteryKwh} kWh` },
@@ -32,7 +34,9 @@ const specs = [
     <img
       src={listing.image}
       alt={`${listing.brand} ${listing.model}`}
-      loading="lazy"
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+      decoding="async"
       width="1200"
       height="800"
       class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"

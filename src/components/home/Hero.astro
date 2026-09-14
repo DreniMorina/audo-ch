@@ -2,6 +2,7 @@
 import Icon from '@/components/icons/Icon.astro';
 import MarketplaceStats from '@/components/home/MarketplaceStats.astro';
 import { browseHref } from '@/lib/browse-search';
+import { Image } from 'astro:assets';
 import heroCar from '@/assets/hero-car.jpg';
 
 const quickFilters = [
@@ -76,11 +77,15 @@ const quickFilters = [
 
     <div class="relative">
       <div class="overflow-hidden rounded-2xl border border-border bg-card shadow-elevated">
-        <img
-          src={heroCar.src}
+        <Image
+          src={heroCar}
           alt="Elektrische Premium-Limousine"
-          width="1600"
-          height="1100"
+          widths={[480, 720, 960]}
+          sizes="(min-width: 768px) 48vw, calc(100vw - 3rem)"
+          format="webp"
+          quality={80}
+          loading="eager"
+          fetchpriority="high"
           class="aspect-[16/11] w-full object-cover"
         />
       </div>
