@@ -90,6 +90,7 @@ export type Database = {
           created_at: string;
           description: string | null;
           fast_charging: boolean;
+          has_warranty: boolean;
           id: string;
           image_url: string | null;
           location: string;
@@ -119,6 +120,7 @@ export type Database = {
           created_at?: string;
           description?: string | null;
           fast_charging?: boolean;
+          has_warranty?: boolean;
           id?: string;
           image_url?: string | null;
           location: string;
@@ -148,6 +150,7 @@ export type Database = {
           created_at?: string;
           description?: string | null;
           fast_charging?: boolean;
+          has_warranty?: boolean;
           id?: string;
           image_url?: string | null;
           location?: string;

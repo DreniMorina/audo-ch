@@ -102,6 +102,7 @@ import { POPULAR_EV_BRANDS } from '@/data/vehicle-brands';
             name="certificateProvider"
             placeholder="Prüfanbieter, z. B. Aviloo / TÜV (optional)"
           />
+          <SelectField name="hasWarranty" label="Mit Garantie" options={['Ja', 'Nein']} required />
           <TextField name="warranty" type="number" placeholder="Restgarantie (Monate), z. B. 28" min={0} />
           <div>
             <select
@@ -355,7 +356,8 @@ import { POPULAR_EV_BRANDS } from '@/data/vehicle-brands';
             battery_health: fd.get('soh') ? num('soh') : null,
             battery_certificate_date: str('certificateDate') || null,
             battery_certificate_provider: str('certificateProvider') || null,
-            warranty_months: fd.get('warranty') ? num('warranty') : null,
+            has_warranty: str('hasWarranty') === 'Ja',
+            warranty_months: str('hasWarranty') === 'Ja' && fd.get('warranty') ? num('warranty') : null,
             seller_type: str('sellerType') === 'Händler' ? 'Dealer' : 'Private',
             price: num('price'),
             location: str('location'),

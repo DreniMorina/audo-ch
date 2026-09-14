@@ -66,6 +66,13 @@ const SELECT_CLASSES = 'h-11 w-full rounded-md border border-border bg-backgroun
         <LabeledField name="soh" label="Batteriezustand (% SoH)" type="number" min={0} max={100} />
         <LabeledField name="certificateDate" label="Datum des Zertifikats" />
         <LabeledField name="certificateProvider" label="Prüfanbieter" />
+        <label class="space-y-2 text-sm font-medium">
+          <span>Mit Garantie *</span>
+          <select name="hasWarranty" required class={`${SELECT_CLASSES} font-normal`}>
+            <option>Ja</option>
+            <option>Nein</option>
+          </select>
+        </label>
         <LabeledField name="warranty" label="Restgarantie (Monate)" type="number" min={0} />
         <LabeledField name="price" label="Preis (CHF)" type="number" required min={0} />
         <LabeledField name="location" label="Ort" required />
@@ -246,6 +253,7 @@ const SELECT_CLASSES = 'h-11 w-full rounded-md border border-border bg-backgroun
       setValue('soh', current.batteryHealth);
       setValue('certificateDate', current.batteryCertificateDate);
       setValue('certificateProvider', current.batteryCertificateProvider);
+      setValue('hasWarranty', current.hasWarranty ? 'Ja' : 'Nein');
       setValue('warranty', current.warrantyMonths);
       setValue('price', current.price);
       setValue('location', current.location);
@@ -357,7 +365,8 @@ const SELECT_CLASSES = 'h-11 w-full rounded-md border border-border bg-backgroun
             fast_charging: str('fastCharging') === 'Ja',
             battery_health: fd.get('soh') ? num('soh') : null,
             ...(newCertificate ? {} : certificateMetadata),
-            warranty_months: fd.get('warranty') ? num('warranty') : null,
+            has_warranty: str('hasWarranty') === 'Ja',
+            warranty_months: str('hasWarranty') === 'Ja' && fd.get('warranty') ? num('warranty') : null,
             seller_type: str('sellerType') === 'Händler' ? 'Dealer' : 'Private',
             price: num('price'),
             location: str('location'),
