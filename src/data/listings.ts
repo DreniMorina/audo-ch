@@ -27,6 +27,7 @@ export type Listing = {
   batteryCertificateProvider: string | null;
   batteryCertificatePdfUrl: string | null;
   batteryCertificatePdfPath: string | null;
+  hasWarranty: boolean;
   warrantyMonths: number | null;
   image: string;
   imageUrl: string | null;
@@ -56,6 +57,7 @@ type Row = {
   battery_certificate_date: string | null;
   battery_certificate_provider: string | null;
   battery_certificate_pdf_url: string | null;
+  has_warranty: boolean;
   warranty_months: number | null;
   image_url: string | null;
   description: string | null;
@@ -114,6 +116,7 @@ function toListing(r: Row): Listing {
     batteryCertificateProvider: r.battery_certificate_provider,
     batteryCertificatePdfUrl: publicDocumentUrl(r.battery_certificate_pdf_url),
     batteryCertificatePdfPath: r.battery_certificate_pdf_url,
+    hasWarranty: r.has_warranty,
     warrantyMonths: r.warranty_months,
     image: storageImage ?? resolveImage(r.image_url),
     imageUrl: r.image_url,
@@ -134,7 +137,7 @@ function toListingImage(r: ImageRow): ListingImage {
 }
 
 const SELECT_COLS =
-  "id,brand,model,year,price,mileage,battery_kwh,range_km,charging_kw,fast_charging,location,country,seller_type,seller_name,seller_email,seller_phone,battery_health,battery_certificate_date,battery_certificate_provider,battery_certificate_pdf_url,warranty_months,image_url,description,status,seller_user_id";
+  "id,brand,model,year,price,mileage,battery_kwh,range_km,charging_kw,fast_charging,location,country,seller_type,seller_name,seller_email,seller_phone,battery_health,battery_certificate_date,battery_certificate_provider,battery_certificate_pdf_url,has_warranty,warranty_months,image_url,description,status,seller_user_id";
 
 export async function fetchApprovedListings(): Promise<Listing[]> {
   const { data, error } = await supabase
@@ -195,6 +198,7 @@ export async function searchApprovedListings(search: BrowseSearch): Promise<Brow
   if (search.maxPrice !== undefined) query = query.lte("price", search.maxPrice);
   if (search.minRange !== undefined) query = query.gte("range_km", search.minRange);
   if (search.seller && search.seller !== "Alle") query = query.eq("seller_type", search.seller);
+  if (search.warranty && search.warranty !== "Alle") query = query.eq("has_warranty", search.warranty === "Ja");
   if (search.fastOnly) query = query.eq("fast_charging", true);
   if (search.certificateOnly) query = query.not("battery_certificate_pdf_url", "is", null);
 
@@ -256,6 +260,7 @@ export type NewListingInput = {
   battery_certificate_date?: string | null;
   battery_certificate_provider?: string | null;
   battery_certificate_pdf_url?: string | null;
+  has_warranty: boolean;
   warranty_months?: number | null;
   seller_type: "Private" | "Dealer";
   seller_name: string;

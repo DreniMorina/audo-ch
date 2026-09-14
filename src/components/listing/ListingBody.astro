@@ -21,7 +21,11 @@ const specs: Array<{ icon: IconName; label: string; value: string }> = [
   {
     icon: 'ShieldCheck',
     label: 'Restgarantie',
-    value: listing.warrantyMonths ? `${listing.warrantyMonths} Monate` : '—',
+    value: listing.hasWarranty
+      ? listing.warrantyMonths
+        ? `${listing.warrantyMonths} Monate`
+        : 'Ja'
+      : 'Nein',
   },
 ];
 

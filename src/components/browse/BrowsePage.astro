@@ -18,6 +18,7 @@ const brand = search.brand ?? 'Alle';
 const maxPrice = search.maxPrice ?? 150000;
 const minRange = search.minRange ?? 0;
 const seller = search.seller ?? 'Alle';
+const warranty = search.warranty ?? 'Alle';
 const brands = Array.from(new Set([...listings.map((listing) => listing.brand), ...(brand !== 'Alle' ? [brand] : [])])).sort();
 const pages = Array.from({ length: pageCount }, (_, index) => index + 1).filter(
   (number) => number === 1 || number === pageCount || Math.abs(number - page) <= 2,
@@ -64,6 +65,18 @@ const pages = Array.from({ length: pageCount }, (_, index) => index + 1).filter(
               <label class:list={['cursor-pointer rounded px-1 py-2 text-center', seller === value ? 'bg-card font-medium shadow-card' : 'text-muted-foreground']}>
                 <input class="sr-only" type="radio" name="seller" value={value} checked={seller === value} />
                 {value === 'Private' ? 'Privat' : value === 'Dealer' ? 'Händler' : 'Alle'}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Mit Garantie</legend>
+          <div class="grid grid-cols-3 gap-1 rounded-md bg-secondary p-1 text-xs">
+            {(['Alle', 'Ja', 'Nein'] as const).map((value) => (
+              <label class:list={['cursor-pointer rounded px-1 py-2 text-center', warranty === value ? 'bg-card font-medium shadow-card' : 'text-muted-foreground']}>
+                <input class="sr-only" type="radio" name="warranty" value={value} checked={warranty === value} />
+                {value}
               </label>
             ))}
           </div>
