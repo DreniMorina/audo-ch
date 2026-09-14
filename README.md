@@ -69,6 +69,26 @@ die Live-Zähler liefert ein `server:defer`-Island mit statischem Fallback nach.
 | Statische Seiten (AGB, SEO, 404, …) | 2,5 kB |
 | Konto, Inserat erstellen/bearbeiten | 225 kB (davon 224 kB Supabase-Client für Auth und Uploads) |
 
+### Schrift und Analytics
+
+- Die Oberfläche verwendet ausschliesslich die lokal ausgelieferte variable **DM Sans**.
+  `src/styles/global.css` registriert den normalen Schriftschnitt für alle Gewichte mit
+  `font-display: swap`; `Layout.astro` lädt genau diese Above-the-fold-Schrift vor. Der
+  Hash im Dateinamen verhindert, dass eine später aktualisierte Schrift unter einem alten
+  Browser-Cache weiterverwendet wird. Externe Google-Fonts-Stylesheets oder Preconnects sind
+  nicht erforderlich.
+- Der kursive Font wird aktuell nirgends verwendet und wird deshalb nicht ausgeliefert oder
+  vorgeladen. Zusätzliche Schriftschnitte sollten nur ergänzt werden, wenn die Oberfläche sie
+  tatsächlich nutzt.
+- Google Analytics wird clientseitig erst nach `window.load` in einer Idle-Phase initialisiert.
+  Die Measurement-ID kommt optional aus `VITE_GA_MEASUREMENT_ID`; ohne Override wird die
+  produktive Standard-ID `G-7EYPB0J019` verwendet. Analytics respektiert die Auswahl aus dem
+  Cookie-Banner, bricht eine noch ausstehende Initialisierung beim Opt-out ab und aktualisiert bei
+  einer späteren Änderung den Consent-Status. Werbesignale und Ads-Speicherung bleiben deaktiviert.
+
+Bei Änderungen an diesen Integrationen sollten `npm run astro -- check`, `npm run build` und
+eine erneute Lighthouse-Messung auf dem bereitgestellten Preview ausgeführt werden.
+
 ## Umgebungsvariablen
 
 Siehe `.env.example`. Die `VITE_*`-Namen aus dem bisherigen Deployment funktionieren weiter:

@@ -18,7 +18,7 @@
     <circle cx="770" cy="390" r="55" fill="#0f172a"/>
     <path d="M960 300h62l-38 70h62"/>
   </g>
-  <text x="90" y="130" fill="#fff" font-family="Sora, Arial, sans-serif" font-size="76" font-weight="800">Audo.ch</text>
+  <text x="90" y="130" fill="#fff" font-family="DM Sans, Arial, sans-serif" font-size="76" font-weight="800">Audo.ch</text>
   <text x="92" y="205" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="34" font-weight="600">Elektroauto kaufen &amp; verkaufen Schweiz</text>
   <text x="92" y="520" fill="#fff" font-family="Arial, sans-serif" font-size="42" font-weight="700">Der Schweizer Marktplatz für E-Autos</text>
 </svg>
