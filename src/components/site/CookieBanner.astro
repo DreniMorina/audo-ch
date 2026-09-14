@@ -1,11 +1,17 @@
 ---
 import Icon from '@/components/icons/Icon.astro';
+
+const DEFAULT_GA_MEASUREMENT_ID = 'G-7EYPB0J019';
+const measurementId =
+  (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined)?.trim() ||
+  DEFAULT_GA_MEASUREMENT_ID;
 ---
 
 {/* Hidden until the script confirms no decision is stored yet. */}
 <div
   hidden
   data-cookie-banner
+  data-ga-measurement-id={measurementId}
   role="dialog"
   aria-modal="false"
   aria-label="Cookie-Einstellungen"
@@ -52,22 +58,161 @@ import Icon from '@/components/icons/Icon.astro';
   </div>
 </div>
 
-<script>
-  import { readConsent, setConsent } from '@/lib/cookie-consent';
+<!--
+  Keep this small bootstrap inline: the banner and deferred analytics do not need a
+  render-blocking module request (or a second request for a shared consent module).
+-->
+<script is:inline>
+  const STORAGE_KEY = 'audo_cookie_consent';
+  const GA_SCRIPT_ID = 'google-analytics-gtag';
+  const banner = document.querySelector('[data-cookie-banner]');
 
-  const banner = document.querySelector<HTMLElement>('[data-cookie-banner]');
   if (banner) {
-    banner.hidden = readConsent() !== null;
+    const measurementId = banner.dataset.gaMeasurementId;
+    let initialized = false;
+    let analyticsAllowed = false;
+    let idleCallback;
+
+    function readConsent() {
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw).analytics === true;
+      } catch {
+        return null;
+      }
+    }
+
+    function setConsent(isAllowed) {
+      try {
+        window.localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({ necessary: true, analytics: isAllowed }),
+        );
+      } catch {
+        // Keep applying the in-memory choice when storage is unavailable.
+      }
+      applyConsent(isAllowed);
+    }
+
+    function updateGoogleConsent(isAllowed) {
+      if (!window.gtag) return;
+      window.gtag('consent', 'update', {
+        analytics_storage: isAllowed ? 'granted' : 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+      });
+    }
+
+    function initializeAnalytics() {
+      idleCallback = undefined;
+      if (!analyticsAllowed || initialized || !measurementId) return;
+
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function () {
+        window.dataLayer.push(arguments);
+      };
+      window.gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: 500,
+      });
+      window.gtag('set', {
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+        ads_data_redaction: true,
+      });
+
+      if (!document.getElementById(GA_SCRIPT_ID)) {
+        const script = document.createElement('script');
+        script.id = GA_SCRIPT_ID;
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+        document.head.appendChild(script);
+      }
+
+      window.gtag('js', new Date());
+      window.gtag('config', measurementId, {
+        send_page_view: false,
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+      });
+      updateGoogleConsent(true);
+      window.gtag('event', 'page_view', {
+        page_path: `${window.location.pathname}${window.location.search}${window.location.hash}`,
+        page_location: window.location.href,
+        page_title: document.title || undefined,
+        send_to: measurementId,
+      });
+      initialized = true;
+    }
+
+    function scheduleAnalytics() {
+      if (initialized || idleCallback !== undefined) return;
+
+      const scheduleWhenIdle = () => {
+        if (!analyticsAllowed || initialized || idleCallback !== undefined) return;
+        idleCallback = 'requestIdleCallback' in window
+          ? window.requestIdleCallback(initializeAnalytics, { timeout: 2500 })
+          : window.setTimeout(initializeAnalytics, 1);
+      };
+
+      if (document.readyState === 'complete') scheduleWhenIdle();
+      else window.addEventListener('load', scheduleWhenIdle, { once: true });
+    }
+
+    function applyConsent(isAllowed) {
+      const wasAllowed = analyticsAllowed;
+      analyticsAllowed = isAllowed;
+
+      if (!isAllowed) {
+        if (idleCallback !== undefined) {
+          if ('cancelIdleCallback' in window) window.cancelIdleCallback(idleCallback);
+          else window.clearTimeout(idleCallback);
+          idleCallback = undefined;
+        }
+        updateGoogleConsent(false);
+        return;
+      }
+
+      if (initialized) {
+        updateGoogleConsent(true);
+        if (!wasAllowed) {
+          window.gtag('event', 'page_view', {
+            page_path: `${window.location.pathname}${window.location.search}${window.location.hash}`,
+            page_location: window.location.href,
+            page_title: document.title || undefined,
+            send_to: measurementId,
+          });
+        }
+      } else {
+        scheduleAnalytics();
+      }
+    }
+
+    const storedConsent = readConsent();
+    banner.hidden = storedConsent !== null;
+    applyConsent(storedConsent ?? true);
 
     document.addEventListener('audo:open-cookie-settings', () => {
       banner.hidden = false;
     });
 
-    banner.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach((button) => {
+    banner.querySelectorAll('[data-consent]').forEach((button) => {
       button.addEventListener('click', () => {
         setConsent(button.dataset.consent === 'allow');
         banner.hidden = true;
       });
+    });
+
+    window.addEventListener('storage', (event) => {
+      if (event.key !== STORAGE_KEY) return;
+      const consent = readConsent();
+      banner.hidden = consent !== null;
+      applyConsent(consent ?? true);
     });
   }
 </script>
