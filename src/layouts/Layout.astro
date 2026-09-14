@@ -55,11 +55,12 @@ const structuredData = [websiteJsonLd(), ...jsonLd].map(jsonLdScript);
     {path && <link rel="canonical" href={canonicalUrl(path)} />}
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
     <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="preload"
+      href="/fonts/dm-sans-variable-dd1563c3.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin="anonymous"
     />
 
     {

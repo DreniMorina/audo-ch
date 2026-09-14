@@ -1,4 +1,4 @@
-const DEFAULT_GA_MEASUREMENT_ID = "G-5PNRN913MT";
+const DEFAULT_GA_MEASUREMENT_ID = "G-7EYPB0J019";
 
 export const GA_MEASUREMENT_ID =
   (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined)?.trim() ||
