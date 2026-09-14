@@ -30,7 +30,8 @@ Inserat anlegen/bearbeiten/löschen und Datei-Uploads.
 ```
 src/
 ├── pages/            Astro-Routen: URL, SEO-Head
-│   ├── index.astro                  SSR – Inserate serverseitig gerendert
+│   ├── index.astro                  Statisch – Inserate zur Build-Zeit, Zähler als Server-Island
+│   ├── elektroauto-*.astro          Statisch – SEO-Landingpages (kaufen/verkaufen/Occasionen)
 │   ├── browse.astro                 SSR – Inserate + Filter aus der Query-String
 │   ├── listings/[id].astro          SSR – Inserat serverseitig, echte 404
 │   ├── account/                     Konto & Inserat bearbeiten
@@ -39,7 +40,7 @@ src/
 ├── components/
 │   ├── icons/                       Inline-SVG-Icons (Icon.astro + icons.ts)
 │   ├── forms/                       Felder und Upload-Widgets
-│   ├── site/                        Header, Footer, Karte, Consent, Analytics
+│   ├── site/                        Header, Footer, Karte, Consent, Analytics, SEO-Landingpage
 │   ├── home/ browse/ listing/ sell/ account/ legal/
 ├── data/             Supabase-Zugriff auf Inserate, Bilder und Zertifikate
 ├── lib/              SEO, Auth, Consent, Formatierung, Fehlermeldungen, Upload-Verhalten
@@ -53,11 +54,13 @@ Alle Seiten werden vorgerendert, ausser:
 
 | Route                            | Grund                                                  |
 | :------------------------------- | :----------------------------------------------------- |
-| `/`                              | Inserate und Zähler kommen aus der Datenbank            |
 | `/browse`                        | Inserate + Startfilter aus `?q=`, `?brand=`, …          |
 | `/listings/[id]`                 | Inserat serverseitig laden, 404 für gelöschte Inserate  |
 | `/account/listings/[id]/edit`    | Dynamische ID ohne bekannte Pfadliste                   |
 | `/sitemap.xml`                   | Enthält alle aktuell freigegebenen Inserate             |
+
+Die Startseite bleibt bewusst statisch: Die Inserate kommen aus einer Build-Zeit-Abfrage,
+die Live-Zähler liefert ein `server:defer`-Island mit statischem Fallback nach.
 
 ### Client-JavaScript
 
