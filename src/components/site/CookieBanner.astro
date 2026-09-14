@@ -22,9 +22,9 @@ import Icon from '@/components/icons/Icon.astro';
         <div>
           <p class="text-sm font-medium text-foreground">Cookie-Einstellungen</p>
           <p class="mt-1 text-sm leading-relaxed text-muted-foreground">
-            Darf Audo.ch Google Analytics für unpersonalisierte Nutzungsstatistiken verwenden? Du
-            kannst Statistik-Cookies zulassen oder ablehnen und deine Entscheidung jederzeit über
-            den Footer ändern.{' '}
+            Audo.ch verwendet Google Analytics standardmässig für unpersonalisierte
+            Nutzungsstatistiken. Du kannst der Statistik-Nutzung widersprechen und deine
+            Entscheidung jederzeit über den Footer ändern.{' '}
             <a href="/datenschutz" class="underline underline-offset-2 hover:text-foreground">
               Datenschutzerklärung
             </a>
@@ -38,14 +38,14 @@ import Icon from '@/components/icons/Icon.astro';
           data-consent="deny"
           class="inline-flex h-10 items-center rounded-lg border border-border bg-card px-5 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
         >
-          Nur notwendig
+          Statistik deaktivieren
         </button>
         <button
           type="button"
           data-consent="allow"
           class="inline-flex h-10 items-center rounded-lg bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          Statistik zulassen
+          Einverstanden
         </button>
       </div>
     </div>
