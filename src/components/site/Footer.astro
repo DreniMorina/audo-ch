@@ -20,6 +20,9 @@ const LINKS = [
       </div>
       <nav class="flex flex-wrap gap-6 text-sm text-muted-foreground">
         {LINKS.map((link) => <a href={link.href} class="hover:text-foreground">{link.label}</a>)}
+        <button type="button" data-cookie-settings class="hover:text-foreground">
+          Cookie-Einstellungen
+        </button>
       </nav>
     </div>
     <p class="mt-8 text-xs text-muted-foreground">
@@ -28,3 +31,11 @@ const LINKS = [
     </p>
   </div>
 </footer>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-cookie-settings]').forEach((button) => {
+    button.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('audo:open-cookie-settings'));
+    });
+  });
+</script>
