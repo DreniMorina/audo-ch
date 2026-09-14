@@ -6,7 +6,8 @@
   src: url("/fonts/dm-sans-variable-dd1563c3.ttf") format("truetype");
   font-style: normal;
   font-weight: 100 900;
-  font-display: swap;
+  /* Keep a late font response from replacing the fallback after first paint. */
+  font-display: optional;
 }
 
 @custom-variant dark (&:is(.dark *));
