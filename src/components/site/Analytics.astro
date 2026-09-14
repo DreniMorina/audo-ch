@@ -1,4 +1,4 @@
-{/* Google Analytics loads only after the visitor allows analytics. */}
+{/* Swiss-market opt-out: analytics runs by default until the visitor objects. */}
 <script>
   import { onConsentChange, readConsent } from '@/lib/cookie-consent';
   import {
@@ -29,6 +29,6 @@
     trackPageView(window.location.href);
   }
 
-  applyConsent(readConsent()?.analytics === true);
+  applyConsent(readConsent()?.analytics ?? true);
   onConsentChange((consent) => applyConsent(consent.analytics));
 </script>

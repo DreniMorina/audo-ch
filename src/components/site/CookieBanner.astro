@@ -8,7 +8,7 @@ import Icon from '@/components/icons/Icon.astro';
   data-cookie-banner
   role="dialog"
   aria-modal="false"
-  aria-label="Google-Analytics-Zustimmung"
+  aria-label="Cookie-Einstellungen"
   class="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] shadow-2xl backdrop-blur-sm"
 >
   <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 md:py-5">
@@ -20,11 +20,11 @@ import Icon from '@/components/icons/Icon.astro';
           <Icon name="BarChart3" class="h-4 w-4" />
         </span>
         <div>
-          <p class="text-sm font-medium text-foreground">Google Analytics?</p>
+          <p class="text-sm font-medium text-foreground">Cookie-Einstellungen</p>
           <p class="mt-1 text-sm leading-relaxed text-muted-foreground">
-            Darf Audo.ch Google Analytics für unpersonalisierte Nutzungsstatistiken verwenden? Es
-            gibt nur Ja oder Nein: Mit Ja stimmst du Google Analytics zu, mit Nein nicht. Du kannst
-            deine Entscheidung jederzeit ändern.{' '}
+            Audo.ch verwendet Google Analytics standardmässig für unpersonalisierte
+            Nutzungsstatistiken. Du kannst der Statistik-Nutzung widersprechen und deine
+            Entscheidung jederzeit über den Footer ändern.{' '}
             <a href="/datenschutz" class="underline underline-offset-2 hover:text-foreground">
               Datenschutzerklärung
             </a>
@@ -38,14 +38,14 @@ import Icon from '@/components/icons/Icon.astro';
           data-consent="deny"
           class="inline-flex h-10 items-center rounded-lg border border-border bg-card px-5 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
         >
-          Nein
+          Statistik deaktivieren
         </button>
         <button
           type="button"
           data-consent="allow"
           class="inline-flex h-10 items-center rounded-lg bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          Ja
+          Einverstanden
         </button>
       </div>
     </div>
@@ -58,6 +58,10 @@ import Icon from '@/components/icons/Icon.astro';
   const banner = document.querySelector<HTMLElement>('[data-cookie-banner]');
   if (banner) {
     banner.hidden = readConsent() !== null;
+
+    document.addEventListener('audo:open-cookie-settings', () => {
+      banner.hidden = false;
+    });
 
     banner.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach((button) => {
       button.addEventListener('click', () => {
