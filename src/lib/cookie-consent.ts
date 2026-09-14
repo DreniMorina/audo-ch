@@ -6,7 +6,7 @@ export interface ConsentState {
 const STORAGE_KEY = "audo_cookie_consent";
 
 function defaultConsent(): ConsentState {
-  return { necessary: true, analytics: true };
+  return { necessary: true, analytics: false };
 }
 
 /** The stored decision, or null when the visitor has not decided yet. */
