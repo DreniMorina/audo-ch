@@ -99,7 +99,9 @@ const pages = Array.from({ length: pageCount }, (_, index) => index + 1).filter(
           <div class="rounded-2xl border border-dashed border-border p-12 text-center text-muted-foreground">Keine Fahrzeuge passen zu diesen Filtern. Erweitere deine Suche.</div>
         ) : (
           <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {listings.map((listing) => <ListingCard listing={listing} />)}
+            {listings.map((listing, index) => (
+              <ListingCard listing={listing} priority={index === 0} />
+            ))}
           </div>
         )}
       </div>
