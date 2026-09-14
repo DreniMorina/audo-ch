@@ -1,0 +1,30 @@
+# Audo.ch
+
+> Audo.ch ist ein Schweizer Marktplatz ausschliesslich für Elektroautos. Die Nutzung der Plattform ist sowohl für Käufer als auch für Verkäufer (Privatpersonen und gewerbliche Händler) vollständig kostenlos. Käufer können öffentlich zugängliche Inserate durchsuchen, Fahrzeugdaten vergleichen und Verkäufer direkt kontaktieren. Verkäufer können eigene Inserate erstellen und verwalten.
+
+## Zentrale Seiten
+
+- [Elektroautos kaufen und verkaufen](https://audo.ch): Übersicht des Marktplatzes und Ratgeberfragen zum E-Auto-Kauf.
+- [Elektroautos durchsuchen](https://audo.ch/browse): Öffentliche, genehmigte Elektroauto-Inserate durchsuchen und filtern. Unterstützt Filterung nach Marke, Modell, Preis, Jahrgang und Kilometerstand.
+- [Elektroauto kaufen Schweiz](https://audo.ch/elektroauto-kaufen-schweiz): Informationen zum Kauf von Elektroautos in der Schweiz.
+- [Gebrauchte Elektroautos Schweiz](https://audo.ch/gebrauchte-elektroautos-schweiz): Informationen zu E-Auto-Occasionen, Batterie, Reichweite und Ladeleistung.
+- [Elektroauto verkaufen](https://audo.ch/elektroauto-verkaufen): Informationen zum Online-Verkauf eines Elektroautos.
+- [Elektroauto inserieren](https://audo.ch/elektroauto-verkaufen-schweiz): Kostenlos ein Elektroauto-Inserat erstellen (für Private und Händler).
+
+## Weitere Informationen
+
+- [Sitemap](https://audo.ch/sitemap.xml): Aktuelle öffentliche Seiten und genehmigte Fahrzeug-Inserate.
+- [Impressum](https://audo.ch/impressum): Betreiber- und Kontaktinformationen.
+- [Datenschutz](https://audo.ch/datenschutz): Datenschutzerklärung.
+- [AGB](https://audo.ch/agb): Nutzungsbedingungen des Marktplatzes.
+
+## Hinweise
+
+- Die Inhalte sind auf die Schweiz ausgerichtet und primär in Deutsch (`de-CH`) verfasst.
+- Gebrauchtwagen werden plattformübergreifend als Occasionen bezeichnet.
+- **Sämtliche Funktionen, inklusive der Inseratserstellung für Privatverkäufer und gewerbliche Autohändler, sind aktuell zu 100 % kostenlos.**
+- Öffentlich sichtbar sind nur von der Plattform geprüfte und genehmigte Inserate.
+- Preise werden in Schweizer Franken (CHF), Distanzen in Kilometern (km) und Batteriekapazitäten in Kilowattstunden (kWh) angegeben.
+- Der Batteriezustand von Occasionen wird als SoH (State of Health) in Prozent angegeben, sofern ein Zertifikat vorliegt.
+- Fahrzeugdaten und Verkäuferangaben stammen aus den jeweiligen Inseraten. Audo.ch ist die Vermittlungsplattform und nicht Vertragspartei des Fahrzeugkaufs.
+- Ladeleistungen werden in Kilowatt (kW) und die WLTP-Reichweite in Kilometern (km) ausgewiesen.
