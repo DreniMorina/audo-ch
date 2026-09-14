@@ -7,9 +7,11 @@ const measurementId =
   DEFAULT_GA_MEASUREMENT_ID;
 ---
 
-{/* Hidden until the script confirms no decision is stored yet. */}
+{/*
+  Render the banner in its initial, visible state. Hiding it until this script runs makes the
+  fixed panel appear after the first paint and causes a large layout shift for new visitors.
+*/}
 <div
-  hidden
   data-cookie-banner
   data-ga-measurement-id={measurementId}
   role="dialog"
