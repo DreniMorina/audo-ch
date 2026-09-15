@@ -7,7 +7,8 @@ import WhyEvOnly from '@/components/home/WhyEvOnly.astro';
 import BatteryTrust from '@/components/home/BatteryTrust.astro';
 import FaqSection from '@/components/home/FaqSection.astro';
 import SellCTA from '@/components/home/SellCTA.astro';
-import { faqJsonLd } from '@/components/home/faq';
+import { faqItems } from '@/components/home/faq';
+import { faqJsonLd } from '@/lib/faq';
 import { fetchFeaturedListings, type Listing } from '@/data/listings';
 
 // A failing query must not take the page down: the grid degrades to empty, exactly as
@@ -24,7 +25,7 @@ try {
   title="Elektroauto kaufen & verkaufen Schweiz | Audo.ch"
   description="Der Schweizer Marktplatz für Elektroautos. Finde gebrauchte und neue E-Autos oder verkaufe dein Elektroauto einfach online."
   path="/"
-  jsonLd={[faqJsonLd()]}
+  jsonLd={[faqJsonLd(faqItems)]}
 >
   <main>
     <Hero />

@@ -1,0 +1,15 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PlatformFaq from '@/components/faq/PlatformFaq.astro';
+import { platformFaqItems } from '@/components/faq/platform-faq';
+import { faqJsonLd } from '@/lib/faq';
+---
+
+<Layout
+  title="FAQ zu Audo.ch | Häufige Fragen zum EV-Marktplatz Schweiz"
+  description="Antworten rund um Audo.ch: Kosten, Konto, Inserate erstellen und bearbeiten, Batteriedaten, Kontakt zu Verkäufern sowie Sicherheit auf dem Schweizer Marktplatz für Elektroautos."
+  path="/faq"
+  jsonLd={[faqJsonLd(platformFaqItems)]}
+>
+  <PlatformFaq />
+</Layout>

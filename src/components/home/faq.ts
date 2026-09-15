@@ -1,4 +1,7 @@
-export const faqItems = [
+import type { FaqItem } from "@/lib/faq";
+
+/** Buyer/seller checklist shown on the home page. Each answer cites a Swiss source. */
+export const faqItems: Array<FaqItem & { sourceLabel: string; sourceHref: string }> = [
   {
     question: "Wie prüfe ich den Batteriezustand (State of Health) eines gebrauchten Elektroautos?",
     answer:
@@ -75,18 +78,3 @@ export const faqItems = [
       "https://www.zh.ch/de/mobilitaet/fahrzeuge-kontrollschilder/code-178-halterwechsel-verboten.html",
   },
 ];
-
-export function faqJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.answer,
-      },
-    })),
-  };
-}
