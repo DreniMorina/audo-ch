@@ -42,12 +42,6 @@ export const platformFaqGroups: PlatformFaqGroup[] = [
         answer:
           "Nein. Audo.ch stellt ausschliesslich die technische Plattform bereit und tritt zu keinem Zeitpunkt als Käufer, Verkäufer, Vermittler oder Vertreter einer Vertragspartei auf. Kaufverträge kommen ausschliesslich zwischen Käufer und Verkäufer zustande, ebenso Zahlung und Fahrzeugübergabe.",
       },
-      {
-        id: "betreiberin",
-        question: "Wer betreibt Audo.ch?",
-        answer:
-          "Audo.ch wird von der yulci GmbH mit Sitz in Neuhausen am Rheinfall betrieben, Handelsregister-Nummer CHE-223.944.232. Vertretungsberechtigte Person ist Dreni Morina, erreichbar unter hallo@audo.ch.",
-      },
     ],
   },
   {
@@ -160,19 +154,13 @@ export const platformFaqGroups: PlatformFaqGroup[] = [
         id: "verdaechtiges-inserat-melden",
         question: "Wie melde ich ein verdächtiges Inserat?",
         answer:
-          "Schicke den Link zum Angebot mit einer kurzen Begründung an hallo@audo.ch. Überweise als Käufer grundsätzlich kein Geld im Voraus, bevor du das Fahrzeug und die Fahrzeugpapiere vor Ort gesehen hast.",
+          "Schicke den Link zum Angebot und eine kurze Begründung an hallo@audo.ch. Hilfreich sind konkrete Hinweise, etwa widersprüchliche Fahrzeugdaten, ein auffällig tiefer Preis oder Bilder, die nicht zum beschriebenen Fahrzeug passen.",
       },
       {
         id: "datenschutz",
         question: "Was passiert mit meinen Daten auf Audo.ch?",
         answer:
           "Personenbezogene Daten werden gemäss der Datenschutzerklärung von Audo.ch bearbeitet, es gilt ausschliesslich Schweizer Recht. Die Kontaktdaten, die du in einem Inserat hinterlegst, sind für Kaufinteressenten sichtbar, denn sie sind der Weg, auf dem dich Käufer erreichen.",
-      },
-      {
-        id: "kontakt",
-        question: "Wie erreiche ich das Team von Audo.ch?",
-        answer:
-          "Per E-Mail an hallo@audo.ch. Audo.ch wird von der yulci GmbH in Neuhausen am Rheinfall in der Schweiz betrieben; Gerichtsstand für Streitigkeiten aus der Nutzung der Plattform ist Schaffhausen.",
       },
     ],
   },
