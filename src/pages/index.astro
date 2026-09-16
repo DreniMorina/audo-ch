@@ -8,6 +8,7 @@ import BatteryTrust from '@/components/home/BatteryTrust.astro';
 import FaqSection from '@/components/home/FaqSection.astro';
 import SellCTA from '@/components/home/SellCTA.astro';
 import { faqItems } from '@/components/home/faq';
+import { platformFaqItems } from '@/components/faq/platform-faq';
 import { faqJsonLd } from '@/lib/faq';
 import { fetchFeaturedListings, type Listing } from '@/data/listings';
 
@@ -25,15 +26,15 @@ try {
   title="Elektroauto kaufen & verkaufen Schweiz | Audo.ch"
   description="Der Schweizer Marktplatz für Elektroautos. Finde gebrauchte und neue E-Autos oder verkaufe dein Elektroauto einfach online."
   path="/"
-  jsonLd={[faqJsonLd(faqItems)]}
+  jsonLd={[faqJsonLd([...platformFaqItems, ...faqItems])]}
 >
   <main>
     <Hero />
     <TrustStrip />
     <Featured listings={listings} />
     <WhyEvOnly />
-    <BatteryTrust />
     <FaqSection />
+    <BatteryTrust />
     <SellCTA />
   </main>
 </Layout>

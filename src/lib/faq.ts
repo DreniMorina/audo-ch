@@ -1,7 +1,7 @@
 /**
- * Shared FAQ primitives. Two FAQ datasets exist side by side: the buyer checklist on
- * the home page (`components/home/faq.ts`) and the platform Q&A on `/faq`
- * (`components/faq/platform-faq.ts`). Both feed the same JSON-LD builder.
+ * Shared FAQ primitives. The buyer checklist (`components/home/faq.ts`) and the
+ * platform Q&A (`components/faq/platform-faq.ts`) are both presented on the home page
+ * and feed the same JSON-LD builder.
  */
 export type FaqItem = {
   question: string;
