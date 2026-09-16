@@ -28,7 +28,7 @@ export const platformFaqGroups: PlatformFaqGroup[] = [
         id: "was-ist-audo",
         question: "Was ist Audo.ch?",
         answer:
-          "Audo.ch ist ein unabhängiger Schweizer Online-Marktplatz ausschliesslich für vollelektrische Fahrzeuge. Käufer finden dort neue und gebrauchte Elektroautos und nehmen direkt mit den Verkäufern Kontakt auf, Verkäufer veröffentlichen ihre Inserate selbst. Betrieben wird Audo.ch von der yulci GmbH in Neuhausen am Rheinfall.",
+          "Audo.ch ist ein Schweizer Online-Marktplatz, der sich ausschliesslich auf den Kauf und Verkauf von Elektroautos spezialisiert hat. Inseriert werden Neuwagen ebenso wie Occasionen, von Privatpersonen wie von Händlern. Käufer nehmen direkt mit den Verkäufern Kontakt auf, Verkäufer veröffentlichen ihre Inserate selbst.",
       },
       {
         id: "nur-elektroautos",
