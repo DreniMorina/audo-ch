@@ -12,6 +12,7 @@ const staticPages = [
   { path: "/elektroauto-kaufen-schweiz", changefreq: "monthly", priority: "0.9" },
   { path: "/gebrauchte-elektroautos-schweiz", changefreq: "monthly", priority: "0.9" },
   { path: "/elektroauto-verkaufen", changefreq: "monthly", priority: "0.85" },
+  { path: "/faq", changefreq: "monthly", priority: "0.7" },
   { path: "/impressum", changefreq: "yearly", priority: "0.2" },
   { path: "/datenschutz", changefreq: "yearly", priority: "0.2" },
   { path: "/agb", changefreq: "yearly", priority: "0.2" },
