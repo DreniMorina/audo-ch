@@ -82,7 +82,7 @@ export const platformFaqGroups: PlatformFaqGroup[] = [
         id: "angaben-geprueft",
         question: "Prüft Audo.ch die Angaben in den Inseraten?",
         answer:
-          "Die Angaben stammen von den Verkäufern, und Audo.ch übernimmt keine Gewähr für deren Richtigkeit, Vollständigkeit oder Aktualität. Angaben zum Batteriezustand und hochgeladene Zertifikate sind freiwillig und sollten vor dem Kauf unabhängig überprüft werden, zum Beispiel mit einem eigenen Batterietest und einer Probefahrt.",
+          "Die Angaben stammen von den Verkäufern, und Audo.ch übernimmt keine Gewähr für deren Richtigkeit, Vollständigkeit oder Aktualität. Angaben zum Batteriezustand und hochgeladene Zertifikate sind freiwillig und müssen vor dem Kauf unabhängig überprüft werden.",
       },
       {
         id: "preise",
@@ -154,7 +154,7 @@ export const platformFaqGroups: PlatformFaqGroup[] = [
         id: "verdaechtiges-inserat-melden",
         question: "Wie melde ich ein verdächtiges Inserat?",
         answer:
-          "Schicke den Link zum Angebot und eine kurze Begründung an hallo@audo.ch. Hilfreich sind konkrete Hinweise, etwa widersprüchliche Fahrzeugdaten, ein auffällig tiefer Preis oder Bilder, die nicht zum beschriebenen Fahrzeug passen.",
+          "Schicke den Link zum Angebot und eine kurze Begründung an hallo@audo.ch.",
       },
       {
         id: "datenschutz",
