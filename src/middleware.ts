@@ -25,7 +25,7 @@ const RATE_LIMIT_MAX_REQUESTS = 120;
 const RATE_LIMIT_REFILL_PER_MS = RATE_LIMIT_MAX_REQUESTS / RATE_LIMIT_WINDOW_MS;
 const RATE_LIMIT_CLEANUP_INTERVAL_MS = 60_000;
 const RATE_LIMIT_BUCKET_TTL_MS = 5 * RATE_LIMIT_WINDOW_MS;
-const RATE_LIMIT_PUBLIC_ASSET_PATHS = new Set(["/og-image.svg", "/robots.txt", "/sitemap.xml"]);
+const RATE_LIMIT_PUBLIC_ASSET_PATHS = new Set(["/robots.txt", "/sitemap.xml"]);
 
 let lastRateLimitCleanupAt = 0;
 

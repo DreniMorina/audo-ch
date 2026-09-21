@@ -2,8 +2,6 @@
 import Icon from '@/components/icons/Icon.astro';
 import MarketplaceStats from '@/components/home/MarketplaceStats.astro';
 import { browseHref } from '@/lib/browse-search';
-import { Image } from 'astro:assets';
-import heroCar from '@/assets/hero-car.jpg';
 
 const quickFilters = [
   { label: 'Tesla', href: browseHref({ brand: 'Tesla' }) },
@@ -75,19 +73,15 @@ const quickFilters = [
       </MarketplaceStats>
     </div>
 
-    <div class="relative">
-      <div class="overflow-hidden rounded-2xl border border-border bg-card shadow-elevated">
-        <Image
-          src={heroCar}
-          alt="Elektrische Premium-Limousine"
-          widths={[480, 720, 960, 1440, 1920]}
-          sizes="(min-width: 768px) 48vw, calc(100vw - 3rem)"
-          format="webp"
-          quality={80}
-          loading="eager"
-          fetchpriority="high"
-          class="aspect-[16/11] w-full object-cover"
-        />
+    <div class="relative" aria-hidden="true">
+      <div class="relative flex aspect-[16/11] items-center justify-center overflow-hidden rounded-2xl border border-border bg-graphite shadow-elevated">
+        <div class="absolute -right-16 -top-20 h-72 w-72 rounded-full bg-electric/20 blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-sky/20 blur-3xl"></div>
+        <div class="relative flex h-40 w-72 items-center rounded-[2rem] border-4 border-white/80 p-4 sm:h-48 sm:w-80">
+          <div class="absolute -right-5 h-16 w-5 rounded-r-lg bg-white/80"></div>
+          <div class="h-full w-[82%] rounded-2xl bg-electric shadow-[0_0_45px_rgba(148,240,0,0.35)]"></div>
+          <Icon name="Zap" class="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 text-graphite" strokeWidth={2.5} />
+        </div>
       </div>
       <div
         class="absolute -bottom-6 -left-6 hidden rounded-2xl border border-border bg-card p-4 shadow-elevated sm:block"

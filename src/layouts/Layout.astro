@@ -10,7 +10,6 @@ interface Props {
   description: string;
   /** Path this page is canonical for, e.g. `/browse`. Omit it on error pages. */
   path?: string;
-  image?: string;
   robots?: string;
   /** Page-specific JSON-LD, added after the site-wide WebSite graph. */
   jsonLd?: unknown[];
@@ -18,9 +17,9 @@ interface Props {
   chrome?: boolean;
 }
 
-const { title, description, path, image, robots, jsonLd = [], chrome = true } = Astro.props;
+const { title, description, path, robots, jsonLd = [], chrome = true } = Astro.props;
 
-const meta = seoMeta({ title, description, path, image, robots });
+const meta = seoMeta({ title, description, path, robots });
 const pageTitle = meta.find((entry) => 'title' in entry)?.title ?? title;
 const metaTags = meta.filter((entry): entry is Exclude<typeof entry, { title: string }> =>
   !('title' in entry),

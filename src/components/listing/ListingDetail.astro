@@ -31,7 +31,6 @@ const galleryImages =
   title={title}
   description={description}
   path={path}
-  image={listing.image.startsWith('http') ? listing.image : undefined}
   jsonLd={[vehicleJsonLd(listing, listingImages, path)]}
 >
   <main class="mx-auto w-full max-w-6xl flex-1 px-6 py-10">

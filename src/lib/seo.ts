@@ -1,5 +1,4 @@
 const SITE_URL = "https://audo.ch";
-const DEFAULT_IMAGE = `${SITE_URL}/og-image.svg`;
 
 export function canonicalUrl(path = "/") {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
@@ -9,14 +8,12 @@ export function seoMeta({
   title,
   description,
   path = "/",
-  image = DEFAULT_IMAGE,
   type = "website",
   robots = "index,follow",
 }: {
   title: string;
   description: string;
   path?: string;
-  image?: string;
   type?: "website" | "article";
   robots?: string;
 }) {
@@ -30,14 +27,11 @@ export function seoMeta({
     { property: "og:description", content: description },
     { property: "og:type", content: type },
     { property: "og:url", content: url },
-    { property: "og:image", content: image },
-    { property: "og:image:alt", content: "Audo.ch Elektroauto-Marktplatz Schweiz" },
     { property: "og:locale", content: "de_CH" },
     { property: "og:site_name", content: "Audo.ch" },
-    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:card", content: "summary" },
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
-    { name: "twitter:image", content: image },
   ];
 }
 
